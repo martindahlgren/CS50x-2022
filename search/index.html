@@ -1,12 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <meta charset="utf-8">
         <title>Search</title>
+        <style>
+            * {
+                font-size: 24px;
+            }
+
+            #top_row {
+                position:absolute;
+                top:4px;
+                right:16px;
+            }
+            #top_row * {
+                margin: 5px;
+                float: left;
+                font-size:14px;
+                font-family: arial, sans-serif;
+            }
+            a:link {
+                text-decoration: none;
+            }
+            #searchplace {
+                position: absolute;
+                top:  50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                text-align: center;
+            }
+            #searchplace > form {
+                display: grid;
+                padding: 2px;
+                grid-template-columns: auto;
+            }
+            input[type="text"] {
+                border-radius: 20px;
+                margin: 30px;
+                height:32px;
+                width:600px;
+                font-size:14px;
+                border: 1px solid;
+            }
+            #buttons > input {
+                width: fit-content;
+            }
+
+        </style>
     </head>
     <body>
-        <form action="https://www.google.com/search">
-            <input type="text" name="q">
-            <input type="submit" value="Google Search">
-        </form>
+        <div id=top_row>
+            <div><a href="images.html">Image Search</a></div>
+            <div><a href="advancedsearch.html">Advanced Search</a></div>
+        </div>
+
+        <div id=searchplace>
+            <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Search Provider Logo">
+            <form action="https://www.google.com/search">
+                <input type="text" name="q">
+                <div id="buttons">
+                    <input type="submit" value="Google Search">
+                    <input type="submit" value="I’m Feeling Lucky">
+                </div>
+            </form>
+        </div>
     </body>
 </html>
