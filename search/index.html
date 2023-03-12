@@ -42,8 +42,12 @@
                 font-size:14px;
                 border: 1px solid;
             }
-            #buttons > input {
+            .buttons {
                 width: fit-content;
+                border-width: 0px;
+                padding: 5px;
+                margin: 0 5px;
+                color: #3c4043;
             }
 
         </style>
@@ -58,9 +62,9 @@
             <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Search Provider Logo">
             <form action="https://www.google.com/search">
                 <input type="text" name="q">
-                <div id="buttons">
-                    <input type="submit" value="Google Search">
-                    <input type="submit" value="I’m Feeling Lucky">
+                <div>
+                    <input class="button" type="submit" value="Google Search">
+                    <button class="button" type="submit" name="btnI" value="1">I’m Feeling Lucky</button>
                 </div>
             </form>
         </div>
