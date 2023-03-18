@@ -19,24 +19,24 @@
         <span id=adv_search_title>Advanced Search</span>
     </div>
     <hr/>
-    <form class=advsearch_container>
+    <form class=advsearch_container action="https://www.google.com/search">
         Find pages with…
 
         <p>
             <label for="these_words">these words:</label>
-            <input class="advsearch_input" type="text" id="these_words">
+            <input class="advsearch_input" type="text" id="these_words" name="as_q">
         </p>
         <p>
             <label for="this_exact">this exact word or phrase:</label>
-            <input class="advsearch_input" type="text" id="this_exact">
+            <input class="advsearch_input" type="text" id="this_exact" name="as_epq">
         </p>
         <p>
             <label for="any_these">any of these words:</label>
-            <input class="advsearch_input" type="text" id="any_these">
+            <input class="advsearch_input" type="text" id="any_these" name="as_oq">
         </p>
         <p>
             <label for="none_these">none of these words:</label>
-            <input class="advsearch_input" type="text" id="none_these">
+            <input class="advsearch_input" type="text" id="none_these" name="as_eq">
         </p>
 
         <input id="advserach_btn" type="submit" value="Advanced Search">
