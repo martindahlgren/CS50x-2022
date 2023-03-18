@@ -61,3 +61,19 @@ a:link {
 .buttons:hover  {
     box-shadow: 0 0 6px gray;
 }
+
+hr {
+    /* Make horizontal line gray */
+    border: 0.5px solid rgb(233, 233, 233);
+}
+
+.advsearch_container {
+    margin-top:30px;
+    margin-left:30px;
+    color:#333;
+}
+
+#adv_search_title {
+    color:#d93025;
+    font-size:20px;
+}

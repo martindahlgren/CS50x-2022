@@ -5,6 +5,16 @@
     <meta charset="utf-8">
     <title>Advanced Search</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        #advanced_search_provider_logo {
+            margin-top: 14px;
+            margin-left: 12px;
+        }
+        form  { display: table;      }
+        form > p { display: table-row;  }
+        label { display: table-cell; }
+        input { display: table-cell; }
+    </style>
 </head>
 
 <body>
@@ -12,15 +22,38 @@
         <div><a href="index.html">Google Search</a></div>
     </div>
 
-    <div id=searchplace>
-        <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Search Provider Logo">
-        <form action="https://www.google.com/search">
-            <input type="text" name="q" id=search_text_field>
-            <div>
-                <button class="buttons" type="submit" name="tbm" value="isch">Advanced Search</button>
-            </div>
-        </form>
+    <img src="https://www.gstatic.com/images/branding/googlelogo/svg/googlelogo_clr_74x24px.svg" alt="Search Provider Logo" id=advanced_search_provider_logo>
+
+    <div class=advsearch_container>
+        <span id=adv_search_title>Advanced Search</span>
     </div>
+    <hr/>
+    <form class=advsearch_container>
+        Find pages with…
+
+        <p>
+            <label for="these_words">these words:</label>
+            <input type="text" id="these_words">
+        </p>
+        <p>
+            <label for="this_exact">this exact word or phrase:</label>
+            <input type="text" id="this_exact">
+        </p>
+        <p>
+            <label for="any_these">any of these words:</label>
+            <input type="text" id="any_these">
+        </p>
+        <p>
+            <label for="none_these">none of these words:</label>
+            <input type="text" id="none_these">
+        </p>
+
+    </form>
+
+
+</div>
+
+
 </body>
 
 </html>
