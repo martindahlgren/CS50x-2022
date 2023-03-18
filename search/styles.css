@@ -22,6 +22,10 @@ a:link {
     text-decoration: none;
 }
 
+#search_img {
+    height:92px;
+}
+
 #searchplace {
     /* Place the search bar in the middle of page */
     position: absolute; /* Relative to ancestor, or viewport */
