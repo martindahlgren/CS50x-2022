@@ -22,10 +22,6 @@ a:link {
     text-decoration: none;
 }
 
-#search_img {
-    height:92px;
-}
-
 #searchplace {
     /* Place the search bar in the middle of page */
     position: absolute; /* Relative to ancestor, or viewport */
@@ -33,6 +29,22 @@ a:link {
     left: 50%;
     transform: translate(-50%,-50%);
     text-align: center;
+}
+
+#search_img_container {
+    /* Enable positioning of #images_text */
+    position: relative;
+}
+
+#images_text {
+    position:absolute;
+    bottom: 5px;
+    left: 221px;
+    color: #4285f4;
+}
+
+#search_img {
+    height:92px;
 }
 
 #search_text_field {
@@ -76,6 +88,7 @@ hr {
 }
 
 .advsearch_container {
+    /* In here all the advanced search stuff are. Make sure they are adjusted left */
     position: relative;
     margin-top:40px;
     margin-left:40px;
@@ -83,6 +96,7 @@ hr {
 }
 
 .advsearch_container > p {
+    /* Each label/field row */
     font-size:14px;
 }
 
