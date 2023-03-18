@@ -1,6 +1,5 @@
 * {
     /* Default text style */
-    font-size: 24px;
     font-family: arial, sans-serif;
 }
 
@@ -43,7 +42,7 @@ a:link {
     border-color: lightgray;
 }
 
-#search_text_field:hover, #search_text_field:active, :focus-visible {
+#search_text_field:hover, #search_text_field:active, #search_text_field:focus-visible {
     box-shadow: 0 0 6px gray;
     outline:none;
 }
@@ -51,7 +50,7 @@ a:link {
 .buttons {
     width: fit-content;
     border-width: 0px;
-    padding: 5px;
+    padding: 10px;
     margin: 0 5px;
     background-color: #f8f9fa;
     color: #3c4043;
@@ -67,13 +66,72 @@ hr {
     border: 0.5px solid rgb(233, 233, 233);
 }
 
+#advanced_search_provider_logo {
+    margin-top: 14px;
+    margin-left: 12px;
+}
+
 .advsearch_container {
-    margin-top:30px;
-    margin-left:30px;
+    position: relative;
+    margin-top:40px;
+    margin-left:40px;
     color:#333;
+}
+
+.advsearch_container > p {
+    font-size:14px;
 }
 
 #adv_search_title {
     color:#d93025;
     font-size:20px;
+}
+
+form.advsearch_container {
+    display: table;
+    border-spacing: 0 20px;
+}
+
+form.advsearch_container > p {
+    display: table-row;
+}
+
+form.advsearch_container > p > label {
+    display: table-cell;
+}
+
+form.advsearch_container > p > input { 
+    display: table-cell; 
+}
+
+.advsearch_input {
+    margin-left: 10px;
+    padding-left: 5px;
+    height: 28px;
+    width: 400px;
+    border-width: 1px;
+}
+
+.advsearch_input:hover, .advsearch_input:active, .advsearch_input:focus-visible {
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.3);
+    border-color:#4d90fe;
+    outline:none;
+}
+
+#advserach_btn {
+    position: absolute;
+    right:0px;
+    height: 30px;
+    min-width: 120px;
+    padding: 0 12px;
+    border: 1px solid #3079ed;
+    color: #fff;
+    background-color: #4d90fe;
+    margin: 10px 0;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+#advserach_btn:hover, #advserach_btn:active, #advserach_btn:focus-visible {
+    background-color: #357ae8;
 }

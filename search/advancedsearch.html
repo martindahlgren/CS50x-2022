@@ -5,16 +5,7 @@
     <meta charset="utf-8">
     <title>Advanced Search</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        #advanced_search_provider_logo {
-            margin-top: 14px;
-            margin-left: 12px;
-        }
-        form  { display: table;      }
-        form > p { display: table-row;  }
-        label { display: table-cell; }
-        input { display: table-cell; }
-    </style>
+
 </head>
 
 <body>
@@ -33,20 +24,22 @@
 
         <p>
             <label for="these_words">these words:</label>
-            <input type="text" id="these_words">
+            <input class="advsearch_input" type="text" id="these_words">
         </p>
         <p>
             <label for="this_exact">this exact word or phrase:</label>
-            <input type="text" id="this_exact">
+            <input class="advsearch_input" type="text" id="this_exact">
         </p>
         <p>
             <label for="any_these">any of these words:</label>
-            <input type="text" id="any_these">
+            <input class="advsearch_input" type="text" id="any_these">
         </p>
         <p>
             <label for="none_these">none of these words:</label>
-            <input type="text" id="none_these">
+            <input class="advsearch_input" type="text" id="none_these">
         </p>
+
+        <input id="advserach_btn" type="submit" value="Advanced Search">
 
     </form>
 
