@@ -3,54 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>Search</title>
-        <style>
-            * {
-                font-size: 24px;
-            }
-
-            #top_row {
-                position:absolute;
-                top:4px;
-                right:16px;
-            }
-            #top_row * {
-                margin: 5px;
-                float: left;
-                font-size:14px;
-                font-family: arial, sans-serif;
-            }
-            a:link {
-                text-decoration: none;
-            }
-            #searchplace {
-                position: absolute;
-                top:  50%;
-                left: 50%;
-                transform: translate(-50%,-50%);
-                text-align: center;
-            }
-            #searchplace > form {
-                display: grid;
-                padding: 2px;
-                grid-template-columns: auto;
-            }
-            input[type="text"] {
-                border-radius: 20px;
-                margin: 30px;
-                height:32px;
-                width:600px;
-                font-size:14px;
-                border: 1px solid;
-            }
-            .buttons {
-                width: fit-content;
-                border-width: 0px;
-                padding: 5px;
-                margin: 0 5px;
-                color: #3c4043;
-            }
-
-        </style>
+        <link rel="stylesheet" href="styles.css">
     </head>
     <body>
         <div id=top_row>
@@ -61,10 +14,10 @@
         <div id=searchplace>
             <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Search Provider Logo">
             <form action="https://www.google.com/search">
-                <input type="text" name="q">
+                <input type="text" name="q" id=search_text_field>
                 <div>
-                    <input class="button" type="submit" value="Google Search">
-                    <button class="button" type="submit" name="btnI" value="1">I’m Feeling Lucky</button>
+                    <input class="buttons" type="submit" value="Google Search">
+                    <button class="buttons" type="submit" name="btnI" value="1">I’m Feeling Lucky</button>
                 </div>
             </form>
         </div>
