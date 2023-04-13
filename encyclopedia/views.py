@@ -7,7 +7,8 @@ from . import util
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
-        "entries": util.list_entries()
+        "entries": util.list_entries(),
+        "header": "All Pages"
     })
 
 def wikipage(request, title):
@@ -21,4 +22,17 @@ def wikipage(request, title):
     else:
         return render(request, "encyclopedia/missing.html", {
             "entry_name": title,
+        })
+
+def search(request):
+    search_term = request.GET.get('q', '')
+    entries = util.list_entries()
+    if search_term.lower() in (e.lower() for e in entries):
+        return wikipage(request, search_term)
+    else:
+        matching_entries = filter(lambda e: search_term.lower() in e.lower(), entries)
+        return render(request, "encyclopedia/index.html", {
+            "entries": matching_entries,
+            "header": "Search Results"
+
         })
