@@ -22,7 +22,7 @@ def save_entry(title, content):
     filename = f"entries/{title}.md"
     if default_storage.exists(filename):
         default_storage.delete(filename)
-    default_storage.save(filename, ContentFile(content))
+    default_storage.save(filename, ContentFile(content.encode('utf-8')))
 
 
 def get_entry(title):
@@ -35,3 +35,10 @@ def get_entry(title):
         return f.read().decode("utf-8")
     except FileNotFoundError:
         return None
+
+def page_title_ok(title):
+    """
+    Check that the title can correspond to a valid file name
+    """
+    invalid_chars = re.search(r'[<>:"/\\|?*]', title)
+    return not invalid_chars

@@ -1,9 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import Http404
 import markdown2
+from django import forms
 
 from . import util
 
+class NewEntryForm(forms.Form):
+    title = forms.CharField()
+    content = forms.CharField(widget=forms.Textarea())
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -36,3 +40,38 @@ def search(request):
             "header": "Search Results"
 
         })
+
+def new(request):
+    if request.method == "POST":
+        # Take in the data the user submitted and save it as form
+        form = NewEntryForm(request.POST)
+        # Check if form data is valid (server-side)
+        if form.is_valid():
+            created_page_title = form.cleaned_data["title"]
+            if not util.page_title_ok(created_page_title):
+                return render(request, "encyclopedia/new.html", {
+                        "error_text": "Illegal characters in title.",
+                        "form": NewEntryForm(form.cleaned_data)
+                    })
+            elif util.get_entry(created_page_title):
+                # If error, allow trying again
+                return render(request, "encyclopedia/new.html", {
+                            "error_text": "Page already exists.",
+                            "form": NewEntryForm(form.cleaned_data)
+                        })
+            else:
+                content = form.cleaned_data["content"]
+                print("\n\n")
+                print(content)
+                print("\n\n")
+                util.save_entry(created_page_title, content)
+                return redirect(f"wiki/{created_page_title}")
+        else:
+            return render(request, "encyclopedia/new.html", {
+                            "error_text": "Data validation fail.",
+                            "form": NewEntryForm()
+            })
+
+    return render(request, "encyclopedia/new.html", {
+                "form": NewEntryForm()
+    })
