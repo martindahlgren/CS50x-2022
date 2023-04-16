@@ -6,4 +6,8 @@
 
 {% block body %}
     {{ entry_content | safe }}
+
+<a href="{% url 'wikiedit' entry_name %}">
+    <button>Edit Page</button>
+</a>
 {% endblock %}

@@ -9,16 +9,16 @@
 <h1>New Encyclopedia Page</h1>
 
 {% if error_text %}
-Error: {{ error_text }}
+    Error: {{ error_text }}
 {% endif %}
 
-<form action="{% url 'new' %}" method="post" id="new_page_form" content='text/html; charset=UTF-8'>
+<form action="{% url 'new' %}" method="post" class="edit_page_form" content='text/html; charset=UTF-8'>
     {% csrf_token %}
     {% for field in form %}
         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
         {{ field }}
     {% endfor %}
-<input type="submit", value="Create Page">
+    <input type="submit", value="Create Page">
 </form>
 
 {% endblock %}

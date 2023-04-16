@@ -3,6 +3,8 @@ import re
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 
+import markdown2
+import bleach
 
 def list_entries():
     """
@@ -42,3 +44,29 @@ def page_title_ok(title):
     """
     invalid_chars = re.search(r'[<>:"/\\|?*]', title)
     return not invalid_chars
+
+
+def santitize_html(unclean_html):
+    # Define a list of allowed HTML tags and attributes
+    allowed_tags = ['ul', 'ol', 'li', 'p', 'pre', 'code',
+                    'blockquote', 'h1', 'h2', 'h3', 'h4',
+                    'h5', 'h6', 'hr', 'br', 'strong', 'em',
+                    'a', 'img'
+                    ]
+    allowed_attrs = bleach.sanitizer.ALLOWED_ATTRIBUTES.copy()
+    allowed_attrs.update({
+        'ol': ['start'],
+        'img': ['alt', 'title', 'width', 'height'] # Allow alt-text but not the actual image
+
+    })
+
+    return bleach.clean(unclean_html, tags=allowed_tags, attributes=allowed_attrs)
+
+
+def markdown2html_safe(md):
+    """
+    Convert markdown to html, and sanitize the result
+    """
+    unclean_html = markdown2.markdown(md)
+    clean_html = santitize_html(unclean_html)
+    return clean_html

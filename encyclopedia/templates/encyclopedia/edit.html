@@ -1,0 +1,22 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+Edit Encyclopedia Page
+{% endblock %}
+
+{% block body %}
+
+<h1>Edit: {{ entry_name }}</h1>
+
+{% if error_text %}
+Error: {{ error_text }}
+{% endif %}
+
+<form action="{% url 'wikiedit' entry_name %}" method="post" class="edit_page_form" content='text/html; charset=UTF-8'>
+    {% csrf_token %}
+    <input type="hidden" name="title" required value="{{entry_name}}">
+    <textarea name="content" cols="40" rows="10" required id="id_content">{{ entry_content }}</textarea>
+    <input type="submit" , value="Save">
+</form>
+
+{% endblock %}

@@ -37,9 +37,9 @@ textarea {
     margin-top: 5px;
 }
 
-#new_page_form > label,
-#new_page_form > input[type="text"],
-#new_page_form > textarea {
+.edit_page_form > label,
+.edit_page_form > input[type="text"],
+.edit_page_form > textarea {
     display: block;
     width: 70%;
     margin-bottom: 5px;
