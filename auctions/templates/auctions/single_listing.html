@@ -1,12 +1,15 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-<h2>Active Listings</h2>
+<h2>Listing: {{ listing.title }}</h2>
 
-{% for listing in listings %}
-<a href="{% url 'listing' listing.id %}">
 <div class="container-fluid p-3 my-3 bg-dark text-white listing-item">
-    <h3>{{ listing.title }}</h3>
+    {% if user.is_authenticated %}
+    <form action="{% url 'watch_toggle' listing.id %}" method="POST">
+        {% csrf_token %}
+        <button id="{% if watched %}watching-btn-active{% else %}watching-btn-inactive{% endif %}" type="submit">Watchlist{% if watched %}&#9745;&#65039;{% endif %}</button>
+    </form>
+    {% endif %}
     {% if listing.image_url %}
     <div>
         <img src="{{listing.image_url}}">
@@ -18,7 +21,5 @@
         <div>Price: <span class="price">${{ highest_bid }}</span></div>
     </div>
 </div>
-</a>
-{% endfor %}
 
 {% endblock %}
