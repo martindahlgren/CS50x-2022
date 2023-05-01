@@ -3,23 +3,36 @@
 {% block body %}
 <h2>Listing: {{ listing.title }}</h2>
 
-<div class="container-fluid p-3 my-3 bg-dark text-white listing-item">
-    {% if user.is_authenticated %}
-    <form action="{% url 'watch_toggle' listing.id %}" method="POST">
-        {% csrf_token %}
-        <button id="{% if watched %}watching-btn-active{% else %}watching-btn-inactive{% endif %}" type="submit">Watchlist{% if watched %}&#9745;&#65039;{% endif %}</button>
-    </form>
-    {% endif %}
-    {% if listing.image_url %}
-    <div>
-        <img src="{{listing.image_url}}">
-    </div>
-    {% endif %}
-
-    <div>
-        <div>{{ listing.description }}</div>
-        <div>Price: <span class="price">${{ highest_bid }}</span></div>
-    </div>
+{% if user.is_authenticated %}
+<form action="{% url 'watch_toggle' listing.id %}" method="POST">
+    {% csrf_token %}
+    <button id="{% if watched %}watching-btn-active{% else %}watching-btn-inactive{% endif %}" type="submit">Watchlist{% if watched %}&#9745;&#65039;{% endif %}</button>
+</form>
+{% endif %}<!-- user.is_authenticated -->
+{% if listing.image_url %}
+<div>
+    <img src="{{listing.image_url}}">
 </div>
+{% endif %}<!-- listing.image_url -->
+
+<div>
+    <div>{{ listing.description }}</div>
+    <div>Price: <span class="price">${{ highest_bid|floatformat:2 }}</span></div>
+</div>
+
+{{nr_bids}} bid(s) so far.{% if user_is_highest%} Your bid is the current bid.{% endif %}
+
+{% if user.is_authenticated %}
+{% if show_bid_error %}
+<p>Your bid wasn't accepted</p>
+{% endif %}<!-- show_bid_error -->
+<form action="{% url 'post_bid' listing.id %}" method="POST">
+    {% csrf_token %}
+    {{ bid_form }}
+    <button type="submit">Place Bid</button>
+</form>
+{% endif %}<!-- user.is_authenticated -->
+
+
 
 {% endblock %}

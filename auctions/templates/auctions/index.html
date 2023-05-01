@@ -4,18 +4,18 @@
 <h2>Active Listings</h2>
 
 {% for listing in listings %}
-<a href="{% url 'listing' listing.id %}">
+<a href="{% url 'listing' listing.0.id %}">
 <div class="container-fluid p-3 my-3 bg-dark text-white listing-item">
-    <h3>{{ listing.title }}</h3>
-    {% if listing.image_url %}
+    <h3>{{ listing.0.title }}</h3>
+    {% if listing.0.image_url %}
     <div>
-        <img src="{{listing.image_url}}">
+        <img src="{{listing.0.image_url}}">
     </div>
     {% endif %}
 
     <div>
-        <div>{{ listing.description }}</div>
-        <div>Price: <span class="price">${{ highest_bid }}</span></div>
+        <div>{{ listing.0.description }}</div>
+        <div>Price: <span class="price">${{ listing.1|floatformat:2 }}</span></div>
     </div>
 </div>
 </a>

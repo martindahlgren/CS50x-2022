@@ -1,13 +1,15 @@
 from django import forms
 from django.contrib.auth import authenticate, login, logout
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import Http404
+from django.http import Http404, HttpResponseBadRequest
 from django.db.models import Max
+import decimal
 
 from .models import User, Listing, Bid
 
@@ -25,12 +27,23 @@ class NewListingForm(forms.ModelForm):
         model = Listing
         fields = ['title', 'description', 'start_bid', 'image_url', 'category']
 
+class PlaceBidForm(forms.Form):
+    def __init__(self, current_value, *args, **kwargs):
+        super(PlaceBidForm, self).__init__(*args, **kwargs)
+        decimal_places = 2
+        min_value=(current_value+decimal.Decimal("0.1")**decimal_places)
+        self.fields['bid_val'] = forms.DecimalField(min_value=min_value, decimal_places=decimal_places)
+
+def _get_highest_bid(listing_id):
+    return Bid.objects.filter(listing_id=listing_id).aggregate(Max('bid'))['bid__max']
+
 
 def index(request):
     listings = Listing.objects.all()
+    listings_with_bid = [(l, _get_highest_bid(l.id)) for l in listings]
     return render(request, "auctions/index.html",
                   {
-                      "listings": listings
+                      "listings": listings_with_bid
                   })
 
 
@@ -74,6 +87,26 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
+@transaction.atomic
+@login_required
+def post_bid(request, listing_key):
+    if request.method == "POST":
+        try:
+            listing = Listing.objects.get(id=listing_key)
+        except ObjectDoesNotExist:
+            raise Http404(f"Listing with id {listing_key} does not exist")
+
+        current_bid = _get_highest_bid(listing.id)
+        form = PlaceBidForm(data=request.POST, current_value=current_bid)
+        if form.is_valid():
+            new_bid = Bid(bid=form.cleaned_data["bid_val"], bidder=request.user, listing=listing)
+            new_bid.save()
+            return redirect("listing", listing_key=listing_key)
+        elif(decimal.Decimal(form.data["bid_val"]) <= current_bid):
+            # Redirect but show warning
+            return redirect(f"{reverse('listing', kwargs={'listing_key':listing_key})}?bid-error=True")
+        else:
+            return HttpResponseBadRequest()
 
 def register(request):
     if request.method == "POST":
@@ -120,15 +153,19 @@ def listing(request, listing_key):
     except ObjectDoesNotExist:
         raise Http404(f"Listing with id {listing_key} does not exist")
 
-    highest_bid = Bid.objects.filter(listing_id=listing.id).aggregate(Max('bid'))['bid__max']
+    highest_bid = _get_highest_bid(listing.id)
+    highest_bid_obj = Bid.objects.get(bid=highest_bid)
     if request.user.is_authenticated:
         is_watched = listing.watchers.filter(pk=request.user.id).exists()
     else:
         is_watched = False
-
     return render(request, "auctions/single_listing.html",
                   {
                       "listing": listing,
                       "highest_bid": highest_bid,
-                      "watched": is_watched
+                      "watched": is_watched,
+                      "user_is_highest": highest_bid_obj.bidder == request.user,
+                      "nr_bids": 2, # TODO
+                      "bid_form": PlaceBidForm(current_value=highest_bid),
+                      "show_bid_error": "bid-error" in request.GET,
                   })
