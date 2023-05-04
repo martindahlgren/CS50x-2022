@@ -155,6 +155,7 @@ def listing(request, listing_key):
 
     highest_bid = _get_highest_bid(listing.id)
     highest_bid_obj = Bid.objects.get(bid=highest_bid)
+    nr_bids = Bid.objects.filter(listing_id=listing.id).count()
     if request.user.is_authenticated:
         is_watched = listing.watchers.filter(pk=request.user.id).exists()
     else:
@@ -165,7 +166,7 @@ def listing(request, listing_key):
                       "highest_bid": highest_bid,
                       "watched": is_watched,
                       "user_is_highest": highest_bid_obj.bidder == request.user,
-                      "nr_bids": 2, # TODO
+                      "nr_bids": nr_bids,
                       "bid_form": PlaceBidForm(current_value=highest_bid),
                       "show_bid_error": "bid-error" in request.GET,
                   })
