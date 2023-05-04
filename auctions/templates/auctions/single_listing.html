@@ -17,7 +17,7 @@
 
 <div>
     <div>{{ listing.description }}</div>
-    <div>Price: <span class="price">${{ highest_bid|floatformat:2 }}</span></div>
+    <div>Price: <span class="price">${{ price|floatformat:2 }}</span></div>
 </div>
 
 {{nr_bids}} bid(s) so far.{% if user_is_highest%} Your bid is the current bid.{% endif %}

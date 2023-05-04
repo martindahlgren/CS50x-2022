@@ -28,10 +28,15 @@ class NewListingForm(forms.ModelForm):
         fields = ['title', 'description', 'start_bid', 'image_url', 'category']
 
 class PlaceBidForm(forms.Form):
-    def __init__(self, current_value, *args, **kwargs):
+    def __init__(self, starting_value, highest_bid=None, *args, **kwargs):
         super(PlaceBidForm, self).__init__(*args, **kwargs)
         decimal_places = 2
-        min_value=(current_value+decimal.Decimal("0.1")**decimal_places)
+        
+        if not highest_bid:
+            min_value=starting_value
+        else:
+            min_value=(highest_bid+decimal.Decimal("0.1")**decimal_places)
+
         self.fields['bid_val'] = forms.DecimalField(min_value=min_value, decimal_places=decimal_places)
 
 def _get_highest_bid(listing_id):
@@ -40,7 +45,7 @@ def _get_highest_bid(listing_id):
 
 def index(request):
     listings = Listing.objects.all()
-    listings_with_bid = [(l, _get_highest_bid(l.id)) for l in listings]
+    listings_with_bid = [(l, _get_highest_bid(l.id) or l.start_bid) or l.start_bid for l in listings]
     return render(request, "auctions/index.html",
                   {
                       "listings": listings_with_bid
@@ -73,10 +78,8 @@ def create_listing_view(request):
     if form.is_valid():
         # Save the listing
         listing = form.save(commit=False)
-        start_bid = Bid(bid=listing.start_bid, bidder=request.user, listing=listing)
         listing.owner = request.user
         listing.save()
-        start_bid.save()
         form = NewListingForm()
     return render(request, "auctions/create-listing.html", {
         "form": form
@@ -96,13 +99,14 @@ def post_bid(request, listing_key):
         except ObjectDoesNotExist:
             raise Http404(f"Listing with id {listing_key} does not exist")
 
-        current_bid = _get_highest_bid(listing.id)
-        form = PlaceBidForm(data=request.POST, current_value=current_bid)
+        highest_bid = _get_highest_bid(listing.id)
+        form = PlaceBidForm(data=request.POST, starting_value=listing.start_bid, highest_bid=highest_bid)
+        new_bid = decimal.Decimal(form.data["bid_val"])
         if form.is_valid():
             new_bid = Bid(bid=form.cleaned_data["bid_val"], bidder=request.user, listing=listing)
             new_bid.save()
             return redirect("listing", listing_key=listing_key)
-        elif(decimal.Decimal(form.data["bid_val"]) <= current_bid):
+        elif((highest_bid and new_bid <= highest_bid) or new_bid < listing.start_bid ):
             # Redirect but show warning
             return redirect(f"{reverse('listing', kwargs={'listing_key':listing_key})}?bid-error=True")
         else:
@@ -154,7 +158,13 @@ def listing(request, listing_key):
         raise Http404(f"Listing with id {listing_key} does not exist")
 
     highest_bid = _get_highest_bid(listing.id)
-    highest_bid_obj = Bid.objects.get(bid=highest_bid)
+    if highest_bid:
+        highest_bid_obj = Bid.objects.get(bid=highest_bid, listing_id=listing.id)
+        user_is_highest = highest_bid_obj.bidder == request.user
+        price = highest_bid
+    else:
+        user_is_highest = False
+        price = listing.start_bid
     nr_bids = Bid.objects.filter(listing_id=listing.id).count()
     if request.user.is_authenticated:
         is_watched = listing.watchers.filter(pk=request.user.id).exists()
@@ -163,10 +173,10 @@ def listing(request, listing_key):
     return render(request, "auctions/single_listing.html",
                   {
                       "listing": listing,
-                      "highest_bid": highest_bid,
+                      "price": price,
                       "watched": is_watched,
-                      "user_is_highest": highest_bid_obj.bidder == request.user,
+                      "user_is_highest": user_is_highest,
                       "nr_bids": nr_bids,
-                      "bid_form": PlaceBidForm(current_value=highest_bid),
+                      "bid_form": PlaceBidForm(starting_value=listing.start_bid, highest_bid=highest_bid),
                       "show_bid_error": "bid-error" in request.GET,
                   })
