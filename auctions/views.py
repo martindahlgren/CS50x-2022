@@ -45,7 +45,7 @@ def _get_highest_bid(listing_id):
 
 def index(request):
     listings = Listing.objects.all()
-    listings_with_bid = [(l, _get_highest_bid(l.id) or l.start_bid) or l.start_bid for l in listings]
+    listings_with_bid = [(l, _get_highest_bid(l.id) or l.start_bid) or l.start_bid for l in listings if not l.has_ended]
     return render(request, "auctions/index.html",
                   {
                       "listings": listings_with_bid
@@ -103,7 +103,7 @@ def post_bid(request, listing_key):
         form = PlaceBidForm(data=request.POST, starting_value=listing.start_bid, highest_bid=highest_bid)
         new_bid = None
         if form.data.get("bid_val"):
-            new_bid = decimal.Decimal(form.daga.get("bid_val"))
+            new_bid = decimal.Decimal(form.data.get("bid_val"))
         if form.is_valid():
             new_bid = Bid(bid=form.cleaned_data["bid_val"], bidder=request.user, listing=listing)
             new_bid.save()
@@ -142,6 +142,17 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+def close_bid(request, listing_key):
+    try:
+        listing = Listing.objects.get(id=listing_key)
+    except ObjectDoesNotExist:
+        raise Http404(f"Listing with id {listing_key} does not exist")
+    if listing.owner == request.user:
+        listing.has_ended = True
+        listing.save()
+    return redirect("listing", listing_key=listing_key)
+
 
 @login_required
 def watch_toggle(request, listing_key):
@@ -184,4 +195,5 @@ def listing(request, listing_key):
                       "nr_bids": nr_bids,
                       "bid_form": PlaceBidForm(starting_value=listing.start_bid, highest_bid=highest_bid),
                       "show_bid_error": "bid-error" in request.GET,
+                      "has_ended": listing.has_ended,
                   })
