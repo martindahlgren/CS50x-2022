@@ -11,7 +11,7 @@ from django.http import Http404, HttpResponseBadRequest
 from django.db.models import Max
 import decimal
 
-from .models import User, Listing, Bid
+from .models import User, Listing, Bid, Comment
 
 
 class NewListingForm(forms.ModelForm):
@@ -153,6 +153,17 @@ def close_bid(request, listing_key):
         listing.save()
     return redirect("listing", listing_key=listing_key)
 
+@login_required
+def add_comment(request, listing_key):
+    try:
+        listing = Listing.objects.get(id=listing_key)
+    except ObjectDoesNotExist:
+        raise Http404(f"Listing with id {listing_key} does not exist")
+    comment = Comment(listing=listing, owner=request.user, content=request.POST["comment"])
+    comment.save()
+    listing.comments.add(comment)
+    return redirect("listing", listing_key=listing_key)
+
 
 @login_required
 def watch_toggle(request, listing_key):
@@ -196,4 +207,5 @@ def listing(request, listing_key):
                       "bid_form": PlaceBidForm(starting_value=listing.start_bid, highest_bid=highest_bid),
                       "show_bid_error": "bid-error" in request.GET,
                       "has_ended": listing.has_ended,
+                      "comments": listing.comments.all()
                   })

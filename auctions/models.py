@@ -40,3 +40,9 @@ class Bid(models.Model):
 
     class Meta:
         unique_together = ('listing', 'bid')
+
+class Comment(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments")
+    owner = models.ForeignKey(User, on_delete=models.SET(get_sentinel_user))
+    content = models.CharField(max_length=1000, blank=False)

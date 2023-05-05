@@ -30,3 +30,12 @@ height: 100%; width: 100%; display:block;
     background-color: darkgray;
     box-shadow: none;
 }
+
+.comment_container {
+    background-color: lightgray;
+    margin: 6px;
+}
+
+.comment_author {
+    font-weight: bold;
+}

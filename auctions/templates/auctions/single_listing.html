@@ -8,12 +8,12 @@
     {% csrf_token %}
     <button id="{% if watched %}watching-btn-active{% else %}watching-btn-inactive{% endif %}" type="submit">Watchlist{% if watched %}&#9745;&#65039;{% endif %}</button>
 </form>
-{% endif %}<!-- user.is_authenticated -->
+{% endif %}{# user.is_authenticated #}
 {% if listing.image_url %}
 <div>
     <img src="{{listing.image_url}}">
 </div>
-{% endif %}<!-- listing.image_url -->
+{% endif %}{# listing.image_url #}
 
 <div>
     <div>{{ listing.description }}</div>
@@ -25,7 +25,7 @@
 
 {% if show_bid_error %}
 <p>Your bid wasn't accepted</p>
-{% endif %}<!-- show_bid_error -->
+{% endif %}{# show_bid_error #}
 {% if not has_ended %}
 <form action="{% url 'post_bid' listing.id %}" method="POST">
     {% csrf_token %}
@@ -38,12 +38,29 @@
     {% csrf_token %}
     <button id="end_auction" type="submit">End Auction</button>
 </form>
-{% endif %}<!-- request.user == listing.owner -->
-{% else %}<!-- not has_ended -->
+{% endif %}{# request.user == listing.owner #}
+{% else %}{# not has_ended #}
 {% if user_is_highest %}
 <div id="winner_message">You are the winner of the auction!</div>
-{% endif %}<!-- user_is_highest -->
-{% endif %}<!-- not has_ended -->
-{% endif %}<!-- user.is_authenticated -->
+{% endif %}{# user_is_highest #}
+{% endif %}{# not has_ended #}
+{% endif %}{# user.is_authenticated #}
 
+{# Comments #}
+
+<div id="comments">
+    {% if user.is_authenticated %}
+    <form action="{% url 'add_comment' listing.id %}" method="POST">
+        {% csrf_token %}
+        <textarea name="comment" required></textarea><br>
+        <button type="submit">Submit Comment</button>
+    </form>
+    {% endif %}{# user.is_authenticated #}
+    {% for comment in comments %}
+        <div class="comment_container">
+            <div class="comment">{{comment.content}}</div>
+            <div class="comment_author">{{comment.owner}}</div>
+        </div>
+    {% endfor %}{# for comment in comments #}
+</div>
 {% endblock %}
