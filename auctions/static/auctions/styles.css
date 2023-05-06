@@ -30,6 +30,7 @@ height: 100%; width: 100%; display:block;
     font-size: 16px;
     border-radius: 4px;
     box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.2);
+    margin-bottom: 25px;
 }
 
 #watching-btn-inactive {
@@ -42,6 +43,7 @@ height: 100%; width: 100%; display:block;
     display: inline-block;
     font-size: 16px;
     border-radius: 4px;
+    margin-bottom: 25px;
 }
 
 .comment_container {
@@ -85,3 +87,15 @@ height: 100%; width: 100%; display:block;
     border: 1px solid #ccc;
     border-radius: 3px;
   }
+
+#price-container {
+    margin: 40px 0px;
+}
+
+#new-comment-area {
+    width: 100%;
+}
+
+#new-comment-button {
+    margin: 0px 0px 20px 0px;
+}

@@ -19,23 +19,25 @@
 </div>
 {% endif %}{# listing.image_url #}
 
-<div>
-    <div>{{ listing.description }}</div>
-    <div>Price: <span class="price">${{ price|floatformat:2 }}</span></div>
+<div>{{ listing.description }}</div>
+
+<div id="price-container">
+    Price: <span class="price">${{ price|floatformat:2 }}</span>
+    {{nr_bids}} bid(s){% if not has_ended %} so far{% endif %}.{% if user_is_highest%} Your bid is the current bid.{% endif %}
+    {% if user.is_authenticated %}
+    
+    {% if show_bid_error %}
+    <p>Your bid wasn't accepted</p>
+    {% endif %}{# show_bid_error #}
+    {% if not has_ended %}
+    <form action="{% url 'post_bid' listing.id %}" method="POST">
+        {% csrf_token %}
+        {{ bid_form }}
+        <button type="submit">Place Bid</button>
+    </form>
 </div>
 
-{{nr_bids}} bid(s){% if not has_ended %} so far{% endif %}.{% if user_is_highest%} Your bid is the current bid.{% endif %}
-{% if user.is_authenticated %}
 
-{% if show_bid_error %}
-<p>Your bid wasn't accepted</p>
-{% endif %}{# show_bid_error #}
-{% if not has_ended %}
-<form action="{% url 'post_bid' listing.id %}" method="POST">
-    {% csrf_token %}
-    {{ bid_form }}
-    <button type="submit">Place Bid</button>
-</form>
 
 {% if request.user == listing.owner %}
 <form action="{% url 'close_bid' listing.id %}" method="POST">
@@ -50,14 +52,14 @@
 {% endif %}{# not has_ended #}
 {% endif %}{# user.is_authenticated #}
 
-{# Comments #}
+<h3>Comments</h3>
 
 <div id="comments">
     {% if user.is_authenticated %}
     <form action="{% url 'add_comment' listing.id %}" method="POST">
         {% csrf_token %}
-        <textarea name="comment" required></textarea><br>
-        <button type="submit">Submit Comment</button>
+        <textarea id="new-comment-area" name="comment" required></textarea><br>
+        <button type="submit" id="new-comment-button">Submit Comment</button>
     </form>
     {% endif %}{# user.is_authenticated #}
     {% for comment in comments %}

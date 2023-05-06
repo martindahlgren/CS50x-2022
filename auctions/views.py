@@ -37,7 +37,7 @@ class PlaceBidForm(forms.Form):
         else:
             min_value=(highest_bid+decimal.Decimal("0.1")**decimal_places)
 
-        self.fields['bid_val'] = forms.DecimalField(min_value=min_value, decimal_places=decimal_places)
+        self.fields['bid_val'] = forms.DecimalField(min_value=min_value, decimal_places=decimal_places, label=False)
 
 def _get_highest_bid(listing_id):
     return Bid.objects.filter(listing_id=listing_id).aggregate(Max('bid'))['bid__max']
