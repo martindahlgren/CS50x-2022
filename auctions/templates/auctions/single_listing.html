@@ -3,6 +3,10 @@
 {% block body %}
 <h2>Listing: {{ listing.title }}</h2>
 
+{% if category %}
+<div><a href="{% url 'category' category.name %}">{{category.name}}</a></div>
+{% endif %}
+
 {% if user.is_authenticated %}
 <form action="{% url 'watch_toggle' listing.id %}" method="POST">
     {% csrf_token %}

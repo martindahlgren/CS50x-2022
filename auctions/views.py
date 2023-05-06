@@ -11,7 +11,7 @@ from django.http import Http404, HttpResponseBadRequest
 from django.db.models import Max
 import decimal
 
-from .models import User, Listing, Bid, Comment
+from .models import User, Listing, Bid, Comment, Category
 
 
 class NewListingForm(forms.ModelForm):
@@ -62,7 +62,23 @@ def watchlist(request):
                       "title": "My Watchlist",
                   })
 
+def category(request, category_name):
+    category = Category.objects.get(name = category_name)
+    listings = category.listing_set.all()
+    listings_with_bid = [(l, _get_highest_bid(l.id) or l.start_bid) or l.start_bid for l in listings]
+    return render(request, "auctions/index.html",
+                  {
+                      "listings": listings_with_bid,
+                      "title": category_name,
+                  })
 
+def categories(request):
+    categories = Category.objects.all().order_by('name')
+
+    return render(request, "auctions/categories.html",
+                  {
+                      "categories": categories,
+                  })
 
 def login_view(request):
     if request.method == "POST":
@@ -213,6 +229,7 @@ def listing(request, listing_key):
                   {
                       "listing": listing,
                       "price": price,
+                      "category": listing.category,
                       "watched": is_watched,
                       "user_is_highest": user_is_highest,
                       "nr_bids": nr_bids,
