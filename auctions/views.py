@@ -44,12 +44,24 @@ def _get_highest_bid(listing_id):
 
 
 def index(request):
-    listings = Listing.objects.all()
-    listings_with_bid = [(l, _get_highest_bid(l.id) or l.start_bid) or l.start_bid for l in listings if not l.has_ended]
+    listings = Listing.objects.filter(has_ended=False)
+    listings_with_bid = [(l, _get_highest_bid(l.id) or l.start_bid) or l.start_bid for l in listings]
     return render(request, "auctions/index.html",
                   {
-                      "listings": listings_with_bid
+                      "listings": listings_with_bid,
+                      "title": "Active Listings",
                   })
+
+@login_required
+def watchlist(request):
+    listings = Listing.objects.filter(watchers=request.user)
+    listings_with_bid = [(l, _get_highest_bid(l.id) or l.start_bid) or l.start_bid for l in listings]
+    return render(request, "auctions/index.html",
+                  {
+                      "listings": listings_with_bid,
+                      "title": "My Watchlist",
+                  })
+
 
 
 def login_view(request):
