@@ -20,15 +20,28 @@ height: 100%; width: 100%; display:block;
 }
 
 #watching-btn-active {
-    color: gray;
-    background-color: white;
-    box-shadow: inset 0 1px 3px rgba(255,255,255,0.2);
+    background-color: #3e8e41;
+    color: white;
+    border: 2px solid white;
+    padding: 12px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 4px;
+    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
 #watching-btn-inactive {
-    color: gray;
-    background-color: darkgray;
-    box-shadow: none;
+    background-color: white;
+    color: #333;
+    border: 2px solid #333;
+    padding: 12px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 4px;
 }
 
 .comment_container {
@@ -39,3 +52,36 @@ height: 100%; width: 100%; display:block;
 .comment_author {
     font-weight: bold;
 }
+
+#new-listing-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+#new-listing-form > p {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  
+#create-listing-btn-container {
+    display: flex;
+    justify-content: flex-end;
+    width: 30%;
+}
+
+#new-listing-form > p > label {
+    text-align: right;
+    margin-right: 10px;
+    width: 30%;
+  }
+
+  #new-listing-form > p > input {
+    width: 40%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }

@@ -10,7 +10,7 @@
 {% if user.is_authenticated %}
 <form action="{% url 'watch_toggle' listing.id %}" method="POST">
     {% csrf_token %}
-    <button id="{% if watched %}watching-btn-active{% else %}watching-btn-inactive{% endif %}" type="submit">Watchlist{% if watched %}&#9745;&#65039;{% endif %}</button>
+    <button id="{% if watched %}watching-btn-active{% else %}watching-btn-inactive{% endif %}" type="submit">Watchlist</button>
 </form>
 {% endif %}{# user.is_authenticated #}
 {% if listing.image_url %}
