@@ -22,7 +22,7 @@
 <div>{{ listing.description }}</div>
 
 <div id="price-container">
-    Price: <span class="price">${{ price|floatformat:2 }}</span>
+    <div>Price: <span class="price">${{ price|floatformat:2 }}</span></div>
     {{nr_bids}} bid(s){% if not has_ended %} so far{% endif %}.{% if user_is_highest%} Your bid is the current bid.{% endif %}
     {% if user.is_authenticated %}
     
@@ -30,27 +30,32 @@
     <p>Your bid wasn't accepted</p>
     {% endif %}{# show_bid_error #}
     {% if not has_ended %}
+    {% if request.user == listing.owner %}
+    <form action="{% url 'close_bid' listing.id %}" method="POST">
+        {% csrf_token %}
+        <button id="end_auction" type="submit">End Auction</button>
+    </form>
+    {% else %}
     <form action="{% url 'post_bid' listing.id %}" method="POST">
         {% csrf_token %}
         {{ bid_form }}
         <button type="submit">Place Bid</button>
     </form>
+    {% endif %}{# request.user == listing.owner #}
+    {% else %}{# not has_ended #}
+    <div>
+    {% if user_is_highest %}
+        Auction has ended. You are the winner of the auction!
+    {% else %}
+        Auction has ended.{% if request.user == listing.owner %} You didn't win.{% endif %}
+    {% endif %}{# user_is_highest #}
+    </div>
+    {% endif %}{# not has_ended #}
+    {% endif %}{# user.is_authenticated #}    
 </div>
 
 
 
-{% if request.user == listing.owner %}
-<form action="{% url 'close_bid' listing.id %}" method="POST">
-    {% csrf_token %}
-    <button id="end_auction" type="submit">End Auction</button>
-</form>
-{% endif %}{# request.user == listing.owner #}
-{% else %}{# not has_ended #}
-{% if user_is_highest %}
-<div id="winner_message">You are the winner of the auction!</div>
-{% endif %}{# user_is_highest #}
-{% endif %}{# not has_ended #}
-{% endif %}{# user.is_authenticated #}
 
 <h3>Comments</h3>
 
