@@ -64,7 +64,7 @@ def watchlist(request):
 
 def category(request, category_name):
     category = Category.objects.get(name = category_name)
-    listings = category.listing_set.all()
+    listings = category.listing_set.filter(has_ended = False)
     listings_with_bid = [(l, _get_highest_bid(l.id) or l.start_bid) or l.start_bid for l in listings]
     return render(request, "auctions/index.html",
                   {
