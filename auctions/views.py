@@ -141,8 +141,13 @@ def post_bid(request, listing_key):
         highest_bid = _get_highest_bid(listing.id)
         form = PlaceBidForm(data=request.POST, starting_value=listing.start_bid, highest_bid=highest_bid)
         new_bid = None
+
+        if listing.has_ended:
+            return redirect(f"{reverse('listing', kwargs={'listing_key':listing_key})}?bid-error=True")
+
         if form.data.get("bid_val"):
             new_bid = decimal.Decimal(form.data.get("bid_val"))
+
         if form.is_valid():
             new_bid = Bid(bid=form.cleaned_data["bid_val"], bidder=request.user, listing=listing)
             new_bid.save()
