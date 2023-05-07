@@ -108,9 +108,15 @@ def create_listing_view(request):
         listing = form.save(commit=False)
         listing.owner = request.user
         listing.save()
+        message = f"Created {form.cleaned_data['title']}."
         form = NewListingForm()
+    elif request.POST:
+        message = "Could not create the listing."
+    else:
+        message = None
     return render(request, "auctions/create-listing.html", {
-        "form": form
+        "form": form,
+        "message": message
     })
 
 
