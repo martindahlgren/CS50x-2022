@@ -91,13 +91,18 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            redirect_url = request.POST.get("next", reverse("index"))
+            return HttpResponseRedirect(redirect_url)
         else:
             return render(request, "auctions/login.html", {
-                "message": "Invalid username and/or password."
+                "message": "Invalid username and/or password.",
+                "next": request.POST.get("next")
             })
     else:
-        return render(request, "auctions/login.html")
+        return render(request, "auctions/login.html",
+                    {
+                        "next": request.GET.get("next")
+                    })
 
 
 @login_required

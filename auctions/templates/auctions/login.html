@@ -17,6 +17,7 @@
             <input class="form-control" type="password" name="password" placeholder="Password">
         </div>
         <input class="btn btn-primary" type="submit" value="Login">
+        {% if next %}<input type="hidden" value="{{next}}" name="next">{% endif %}
     </form>
 
     Don't have an account? <a href="{% url 'register' %}">Register here.</a>
