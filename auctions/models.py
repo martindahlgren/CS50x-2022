@@ -29,8 +29,8 @@ class Listing(models.Model):
     owner = models.ForeignKey(User, on_delete=models.SET(get_sentinel_user))
     has_ended = models.BooleanField(default=False)
     # Bid has ForeignKey to Listing
+    # Comment has ForeignKey to Lising
     watchers = models.ManyToManyField(User, related_name='watched_listings')
-    # TODO: comments
 
 class Bid(models.Model):
     id = models.BigAutoField(primary_key=True)
