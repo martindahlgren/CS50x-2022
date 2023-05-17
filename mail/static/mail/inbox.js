@@ -6,9 +6,31 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
   document.querySelector('#compose').addEventListener('click', compose_email);
 
+  // Send email event listener
+  document.querySelector('#compose-form').addEventListener('submit', send_email);
+
   // By default, load the inbox
   load_mailbox('inbox');
 });
+
+function send_email(event) {
+  event.preventDefault()
+  const formFields = event.target.elements;
+  fetch('/emails', {
+    method: 'POST',
+    body: JSON.stringify({
+        recipients: formFields.namedItem('compose-recipients').value,
+        subject: formFields.namedItem('compose-subject').value,
+        body: formFields.namedItem('compose-body').value
+    })
+  })
+  .then(response => response.json())
+  .then(result => {
+      // Print result
+      console.log(result);
+  })
+  .then(() => load_mailbox('sent'));
+}
 
 function compose_email() {
 
