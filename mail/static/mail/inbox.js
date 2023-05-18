@@ -24,12 +24,17 @@ function send_email(event) {
         body: formFields.namedItem('compose-body').value
     })
   })
-  .then(response => response.json())
-  .then(result => {
-      // Print result
-      console.log(result);
-  })
-  .then(() => load_mailbox('sent'));
+  .then(response => {
+      if (response.status == 201) {
+        load_mailbox('sent')
+      }
+      else {
+        response.json().then(result => {
+          console.log(result)
+          document.querySelector('#send_error').innerHTML = result.error;
+        }).catch(() => {document.querySelector('#send_error').innerHTML = "Communication error"})
+      }
+  }).catch(() => {document.querySelector('#send_error').innerHTML = "Communication error"})
 }
 
 function compose_email() {
@@ -37,6 +42,9 @@ function compose_email() {
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
+
+  // Show no error
+  document.querySelector('#send_error').innerHTML = '';
 
   // Clear out composition fields
   document.querySelector('#compose-recipients').value = '';
