@@ -1,3 +1,22 @@
 textarea {
     min-height: 400px;
 }
+
+.email-in-list {
+    border: 2px solid rgba(0,0,0,.2); /* Border properties */
+    margin: 10px; /* Margin properties */
+    padding: 20px; /* Padding properties */
+    cursor:pointer;
+}
+
+.email-in-list:hover {
+    border: 2px solid #000; /* Border properties */
+}
+
+.email-in-list-read {
+    background-color: gray;
+}
+
+.email-in-list-unread {
+    background-color: white;
+}
