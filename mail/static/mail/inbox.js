@@ -41,6 +41,7 @@ function compose_email() {
 
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#email-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
 
   // Show no error
@@ -56,6 +57,7 @@ function load_mailbox(mailbox) {
 
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
+  document.querySelector('#email-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'none';
 
   // Show the mailbox name, clear emails
@@ -70,7 +72,7 @@ function load_mailbox(mailbox) {
 
         const element = document.createElement('div');
         element.classList.add('email-in-list');
-        if (element.read) {
+        if (email.read) {
           element.classList.add('email-in-list-read')
         }
         else {
@@ -78,11 +80,64 @@ function load_mailbox(mailbox) {
         }
         element.innerHTML = `<h3>Subject: ${email.subject}</h3><p>From: ${email.sender}<br>To: ${email.recipients}<br>${email.timestamp}</p>`;
         element.addEventListener('click', function () {
-          console.log('This element has been clicked!')
+          load_email(mailbox, email.id)
         });
         document.querySelector('#emails-view').append(element);
 
       })
     });
+
+}
+
+function update_archive(set_archive, email_id) {
+  fetch(`/emails/${email_id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      archived: set_archive
+  })
+  }).then(() => load_mailbox('inbox'))
+}
+
+function load_email(mailbox, email_id) {
+    // Show the mail and hide other views
+    document.querySelector('#emails-view').style.display = 'none';
+    document.querySelector('#email-view').style.display = 'none';
+    document.querySelector('#compose-view').style.display = 'none';
+
+
+    if (mailbox !== 'sent') {
+      document.getElementById("archive-button").style.display = 'block';
+    } else {
+      document.getElementById("archive-button").style.display = 'none';
+    }
+
+    fetch(`/emails/${email_id}`, {
+      method: 'GET'
+    }).then(response => response.json())
+    .then(email => {
+      document.getElementById("email-subject").innerHTML = email.subject;
+      document.getElementById("email-from").innerHTML = email.sender;
+      document.getElementById("email-to").innerHTML = email.recipients;
+      document.getElementById("email-time").innerHTML = email.timestamp;
+      document.getElementById("email-content").innerHTML = email.body;
+
+      archive_button = document.getElementById("archive-button")
+      if (email.archived) {
+        archive_button.innerHTML = "Un-Archive"
+        archive_button.onclick = () => update_archive(false, email_id)
+      } else {
+        archive_button.innerHTML = "Archive"
+        archive_button.onclick = () => update_archive(true, email_id)
+      }
+
+      document.querySelector('#email-view').style.display = 'block';
+    })
+
+    fetch(`/emails/${email_id}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        read: true
+    })
+    })
 
 }

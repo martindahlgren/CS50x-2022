@@ -2,6 +2,12 @@ textarea {
     min-height: 400px;
 }
 
+html {
+    /* Avoid the content shifting depending on if scroll bar is shown or not */
+    overflow-x: hidden;
+    margin-right: calc(-1 * (100vw - 100%));
+  }
+
 .email-in-list {
     border: 2px solid rgba(0,0,0,.2); /* Border properties */
     margin: 10px; /* Margin properties */
@@ -19,4 +25,13 @@ textarea {
 
 .email-in-list-unread {
     background-color: white;
+}
+
+#email-content, #email-metadata {
+    margin: 10px;
+}
+
+#archive-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
