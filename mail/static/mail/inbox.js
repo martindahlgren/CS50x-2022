@@ -127,7 +127,7 @@ function load_email(mailbox, email_id) {
       document.getElementById("email-from").innerHTML = email.sender;
       document.getElementById("email-to").innerHTML = email.recipients;
       document.getElementById("email-time").innerHTML = email.timestamp;
-      document.getElementById("email-content").innerHTML = email.body;
+      document.getElementById("email-content").innerText = email.body;
 
       document.getElementById("reply-button").onclick = (() => reply(email));
 
