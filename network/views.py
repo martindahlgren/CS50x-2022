@@ -53,6 +53,8 @@ def post(request):
     data = json.loads(request.body)
     user = request.user
     post_pody = data["post"]
+    if post_pody == "":
+        return JsonResponse({"error": "Empty Post"}, status=400)
     new_post = models.Post(user=user, body=post_pody)
     new_post.save()
 

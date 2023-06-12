@@ -9,7 +9,7 @@ class User(AbstractUser):
 class Post(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
-    body = models.TextField(blank=True)
+    body = models.TextField(blank=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
 class Like(models.Model):
