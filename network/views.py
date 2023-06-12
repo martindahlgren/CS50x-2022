@@ -1,10 +1,13 @@
+import json
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.urls import reverse
 
-from .models import User
+from . import models
 
 
 def index(request):
@@ -35,6 +38,18 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
+@login_required
+@require_POST
+def post(request):
+    data = json.loads(request.body)
+    user = request.user
+    post_pody = data["post"]
+    new_post = models.Post(user=user, body=post_pody)
+    new_post.save()
+
+    return JsonResponse(new_post.serialize(), status=201)
+
+
 
 def register(request):
     if request.method == "POST":
@@ -51,7 +66,7 @@ def register(request):
 
         # Attempt to create new user
         try:
-            user = User.objects.create_user(username, email, password)
+            user = models.User.objects.create_user(username, email, password)
             user.save()
         except IntegrityError:
             return render(request, "network/register.html", {

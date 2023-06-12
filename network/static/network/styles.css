@@ -1,0 +1,7 @@
+.page-title {
+    margin: 10px;
+}
+
+#new-post-form > textarea {
+    min-width: 100%;
+}

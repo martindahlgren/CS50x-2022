@@ -1,5 +1,18 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    TODO
+{% if user.is_authenticated %}
+{% csrf_token %}
+
+
+<h1 class="page-title">All Posts</h1>
+<div class="container bg-light py-3 my-3">
+    <h2>New Post</h2>
+    <form id="new-post-form">
+        <textarea id="new-post" ></textarea>
+        <div><input type="submit" class="btn btn-primary" /></div>
+    </form>
+</div>
+
+{% endif %}
 {% endblock %}
