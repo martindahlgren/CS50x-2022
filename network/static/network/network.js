@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }).then(response => {
             if (response.status == 201) {
                 response.json().then(json => {
-                    // TODO: Something meaningful
-                    console.log(json)
+                    // TODO: Consider something cooler here :)
+                    window.location.replace(document.querySelector("#this-route").value);
                 })
             }
         })

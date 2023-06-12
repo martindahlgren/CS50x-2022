@@ -2,16 +2,25 @@ import json
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.urls import reverse
+from django.core.paginator import Paginator
 
 from . import models
 
+def index(request, page=1):
+    latest = request.GET.get("latest")
+    if latest is not None:
+        posts_query = models.Post.objects.filter(id__lte = int(latest)).order_by('-id')
+    else:
+        posts_query = models.Post.objects.all().order_by('-id')
+        latest = posts_query.first().id
+    p = Paginator(posts_query, 10)
+    page_obj = p.page(page)
 
-def index(request):
-    return render(request, "network/index.html")
+    return render(request, "network/index.html", {'page_obj': page_obj, "show_new": True, "latest": latest})
 
 
 def login_view(request):
@@ -47,7 +56,7 @@ def post(request):
     new_post = models.Post(user=user, body=post_pody)
     new_post.save()
 
-    return JsonResponse(new_post.serialize(), status=201)
+    return JsonResponse({"TODO": "TODO"}, status=201)
 
 
 

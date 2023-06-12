@@ -1,7 +1,35 @@
+html {
+    /* Avoid the content shifting depending on if scroll bar is shown or not */
+    overflow-x: hidden;
+    margin-right: calc(-1 * (100vw - 100%));
+  }
+
 .page-title {
     margin: 10px;
 }
 
 #new-post-form > textarea {
     min-width: 100%;
+}
+
+
+.timestamp {
+    font-style: italic;
+    color: rgb(140, 140, 150);
+}
+
+.post {
+    background-color: #e3f1f3;
+    margin: 7px;   
+}
+
+.center-container {
+    min-width: 50%;
+    max-width: 75%;
+    margin-right: auto;
+    margin-left: auto;
+    padding: 10px;
+    margin-top: 15px!important;
+    margin-bottom: 15px!important;
+    background-color: #f0f8ff;
 }

@@ -12,14 +12,6 @@ class Post(models.Model):
     body = models.TextField(blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "creator": self.user.username,
-            "body": self.body,
-            "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
-        }
-
 class Like(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="likes")
