@@ -12,6 +12,9 @@ class Post(models.Model):
     body = models.TextField(blank=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    def timestamp_utc(self):
+        return self.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ')
+
 class Like(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="likes")

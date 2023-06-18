@@ -25,4 +25,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
+    // Convert timezones to local
+    var timestamps = document.getElementsByClassName("timestamp");
+    for (var i = 0; i < timestamps.length; i++) {
+        item = timestamps.item(i);
+        if (item.dataset.timezone == "utc")
+        {
+            let d = new Date(item.innerHTML);
+            item.innerHTML = d.toLocaleString()
+            item.dataset.timezone = "local"
+        }
+    }
+
 });
