@@ -17,5 +17,6 @@ urlpatterns = [
     path("like", views.like, name="like"),
     path("user/<str:viewed_user>", views.user, name="user"),
     path("user/<str:viewed_user>/<int:page>", views.user, name="user"),
+    path("follow/user/<str:viewed_user>", views.follow_toggle, name="follow_toggle"),
 
 ]

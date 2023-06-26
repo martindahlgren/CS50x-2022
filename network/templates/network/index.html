@@ -1,11 +1,11 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-{% if user.is_authenticated %}
 {% csrf_token %}
 <input type="hidden" id="this-route" value="{{this_route}}">
 
 <h1 class="page-title">{{page_title}}</h1>
+
 {% if show_new %}
 <div class="center-container">
     <h2>New Post</h2>
@@ -15,6 +15,25 @@
     </form>
 </div>
 {% endif %} {# show_new #}
+
+{% if show_user %}
+<div class="center-container">
+    Followers: {{followers}}<br/>
+    Following: {{following}}<br/>
+    {% if can_follow %}
+    <form id="toggle-follow-form" action="/follow/user/{{viewed_user}}" method="post">
+        {% csrf_token %}
+        {% if is_following %}
+        <input type="submit" class="btn btn-primary" value="Unfollow" />
+        {% else %}
+        <input type="submit" class="btn btn-primary" value="Follow"/>
+        {% endif %}
+    </form>
+    {% endif %}
+
+</div>
+{% endif %} {# show_user #}
+
 <div class="center-container">
 {% if page_obj.has_previous or page_obj.has_next %}
     <nav aria-label="Page navigation example">
@@ -46,6 +65,4 @@
 
 </div>
 
-
-{% endif %}
 {% endblock %}

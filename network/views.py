@@ -1,7 +1,7 @@
 import json
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, Http404
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -10,7 +10,7 @@ from django.core.paginator import Paginator
 
 from . import models
 
-def show_posts(request, page, this_route, page_title, show_new, filter={}):
+def show_posts(request, page, this_route, page_title, show_new, filter={}, extra_params={}):
     latest = request.GET.get("latest")
     if latest is not None:
         posts_query = models.Post.objects.filter(id__lte = int(latest)).filter(**filter).order_by('-id')
@@ -20,23 +20,49 @@ def show_posts(request, page, this_route, page_title, show_new, filter={}):
             latest = posts_query.first().id
     p = Paginator(posts_query, 10)
     page_obj = p.page(page)
+    template_params = {'page_obj': page_obj, "show_new": show_new, "latest": latest, "this_route": this_route, "page_title": page_title}
 
-    return render(request, "network/index.html", {'page_obj': page_obj, "show_new": show_new, "latest": latest, "this_route": this_route, "page_title": page_title})
+    return render(request, "network/index.html", dict(template_params.items() | extra_params.items() ) )
 
 def index(request, page=1):
-    return show_posts(request, page, "index", "All Posts", True)
+    return show_posts(request, page, "index", "All Posts", request.user.is_authenticated)
 
 @login_required
 def following(request, page=1):
     following_users = request.user.following.all().values('following')
-
     filter = {"user__in": following_users}
-    return show_posts(request, page, "following", "Following", True, filter)
+
+    return show_posts(request, page, "following", "Following", False, filter)
+
+@login_required
+@require_POST
+def follow_toggle(request, viewed_user):
+    viewed_user_obj = models.User.objects.get(username=viewed_user)
+
+    if is_following(request.user, viewed_user_obj):
+        models.Follow.objects.get(follower=request.user, following=viewed_user_obj).delete()
+    else:
+        new_follow = models.Follow(follower=request.user, following=viewed_user_obj)
+        new_follow.save()
+
+    return redirect(f"/user/{viewed_user}")
+
+
+def is_following(user, viewed_user):
+    result = models.Follow.objects.filter(follower=user, following=viewed_user).count() > 0
+    return  result
 
 def user(request, viewed_user, page=1):
-    viewed_user_id = models.User.objects.get(username=viewed_user).id
-    filter = {"user": viewed_user_id}
-    return show_posts(request, page, f"user/{viewed_user}", viewed_user, False, filter)
+    try:
+        viewed_user_obj = models.User.objects.get(username=viewed_user)
+    except models.User.DoesNotExist:
+        raise Http404()
+    filter = {"user": viewed_user_obj.id}
+    can_follow = request.user.is_authenticated and viewed_user_obj != request.user
+
+    extra_params = {"show_user": True, "followers": viewed_user_obj.followers.count(), "following": viewed_user_obj.following.count(), "is_following": is_following(request.user, viewed_user_obj), "viewed_user": viewed_user, "can_follow": can_follow}
+
+    return show_posts(request, page, f"user/{viewed_user}", viewed_user, False, filter, extra_params)
 
 def login_view(request):
     if request.method == "POST":
