@@ -3,9 +3,9 @@
 {% block body %}
 {% if user.is_authenticated %}
 {% csrf_token %}
-<input type="hidden" id="this-route" value="{% url 'index' %}">
+<input type="hidden" id="this-route" value="{{this_route}}">
 
-<h1 class="page-title">All Posts</h1>
+<h1 class="page-title">{{page_title}}</h1>
 {% if show_new %}
 <div class="center-container">
     <h2>New Post</h2>
@@ -20,13 +20,13 @@
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-end">
             {% if page_obj.has_previous %}
-            <li class="page-item"><a class="page-link" href="{% url 'index' page_obj.previous_page_number %}{% if page_obj.previous_page_number != 1 %}?latest={{ latest }}{% endif %}">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="/{{this_route}}/{{page_obj.previous_page_number}}{% if page_obj.previous_page_number != 1 %}?latest={{ latest }}{% endif %}">Previous</a></li>
             {% else %}
             <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a></li>
             {% endif %} {# if page_obj.has_previous #}
 
             {% if page_obj.has_next %}
-            <li class="page-item"><a class="page-link" href="{% url 'index' page_obj.next_page_number %}?latest={{ latest }}">Next</a></li>
+            <li class="page-item"><a class="page-link" href="/{{this_route}}/{{page_obj.next_page_number}}?latest={{ latest }}">Next</a></li>
             {% else %}
             <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a></li>
             {% endif %} {# if page_obj.has_next #}
@@ -36,7 +36,7 @@
 
 {% for post in page_obj %}
 <div class="post">
-    <a href>{{ post.user }}</a><br/>
+    <a href="{% url 'user' post.user %}">{{ post.user }}</a><br/>
     <span class="timestamp" data-timezone="utc">{{ post.timestamp_utc }}</span><br/>
     {{ post.body|linebreaks }}
     <a href class="like-button" data-post-id="{{post.id}}">❤️ <span id="like-count-{{post.id}}">{{post.n_likes}}</span><a href>

@@ -10,18 +10,33 @@ from django.core.paginator import Paginator
 
 from . import models
 
-def index(request, page=1):
+def show_posts(request, page, this_route, page_title, show_new, filter={}):
     latest = request.GET.get("latest")
     if latest is not None:
-        posts_query = models.Post.objects.filter(id__lte = int(latest)).order_by('-id')
+        posts_query = models.Post.objects.filter(id__lte = int(latest)).filter(**filter).order_by('-id')
     else:
-        posts_query = models.Post.objects.all().order_by('-id')
-        latest = posts_query.first().id
+        posts_query = models.Post.objects.filter(**filter).order_by('-id')
+        if posts_query.first():
+            latest = posts_query.first().id
     p = Paginator(posts_query, 10)
     page_obj = p.page(page)
 
-    return render(request, "network/index.html", {'page_obj': page_obj, "show_new": True, "latest": latest})
+    return render(request, "network/index.html", {'page_obj': page_obj, "show_new": show_new, "latest": latest, "this_route": this_route, "page_title": page_title})
 
+def index(request, page=1):
+    return show_posts(request, page, "index", "All Posts", True)
+
+@login_required
+def following(request, page=1):
+    following_users = request.user.following.all().values('following')
+
+    filter = {"user__in": following_users}
+    return show_posts(request, page, "following", "Following", True, filter)
+
+def user(request, viewed_user, page=1):
+    viewed_user_id = models.User.objects.get(username=viewed_user).id
+    filter = {"user": viewed_user_id}
+    return show_posts(request, page, f"user/{viewed_user}", viewed_user, False, filter)
 
 def login_view(request):
     if request.method == "POST":

@@ -1,10 +1,15 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-
 class User(AbstractUser):
     id = models.BigAutoField(primary_key=True)
 
+class Follow(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    follower = models.ForeignKey(User, related_name='following', on_delete=models.CASCADE)
+    following = models.ForeignKey(User, related_name='followers', on_delete=models.CASCADE)
+    class Meta:
+        unique_together = ('follower', 'following')
 
 class Post(models.Model):
     id = models.BigAutoField(primary_key=True)
