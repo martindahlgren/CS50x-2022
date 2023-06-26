@@ -36,7 +36,10 @@
 
 {% for post in page_obj %}
 <div class="post">
-    <a href>{{ post.user }}</a><br/><span class="timestamp" data-timezone="utc">{{ post.timestamp_utc }}</span><br/>{{ post.body|linebreaks }}
+    <a href>{{ post.user }}</a><br/>
+    <span class="timestamp" data-timezone="utc">{{ post.timestamp_utc }}</span><br/>
+    {{ post.body|linebreaks }}
+    <a href class="like-button" data-post-id="{{post.id}}">❤️ <span id="like-count-{{post.id}}">{{post.n_likes}}</span><a href>
 </div>
 {% endfor %}
 

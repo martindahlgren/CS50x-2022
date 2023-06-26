@@ -60,6 +60,24 @@ def post(request):
 
     return JsonResponse({"TODO": "TODO"}, status=201)
 
+@login_required
+@require_POST
+def like(request):
+    data = json.loads(request.body)
+    user = request.user
+    post_id = data["post_id"]
+    post = models.Post.objects.get(id=post_id)
+    likes = post.likes
+    try:
+        existing_like = likes.get(user=user)
+        existing_like.delete()
+    except models.Like.DoesNotExist:
+        new_like = models.Like(user=user, post=post)
+        new_like.save()
+
+    like_count = post.n_likes()
+
+    return JsonResponse({"post_id": post_id, "like_count": like_count}, status=201)
 
 
 def register(request):
