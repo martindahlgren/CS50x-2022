@@ -44,7 +44,33 @@ document.addEventListener('DOMContentLoaded', function () {
             item.onclick = () => {update_like_count(item.dataset.postId); return false;};
     }
 
+        // Fix edit button
+        var edit_btn = document.getElementsByClassName("edit-button");
+        for (var i = 0; i < edit_btn.length; i++) {
+            const item = edit_btn.item(i);
+                item.onclick = () => {edit_post_pressed(item.dataset.postId); return false;};
+        }
 });
+
+
+function edit_post_pressed(post_id) {
+    content_item = document.getElementById(`post-content-${post_id}`)
+    content = content_item.innerText
+    content_item.innerHTML = "<textarea class=\"editarea\"></textarea><br/>"
+    textarea_item = content_item.firstChild
+    textarea_item.innerHTML = content
+    edit_btn = document.getElementById(`edit-btn-${post_id}`)
+    edit_btn.innerHTML = "Save"
+    edit_btn.onclick = () => {
+        content_item.innerHTML = '';
+        var newText = document.createTextNode(textarea_item.value);
+        content_item.appendChild(newText);
+        edit_btn.innerHTML = "Edit"
+        edit_btn.onclick = () => {edit_post_pressed(post_id); return false;};
+        // TODO: Send the textarea_item.value to a server
+        return false;
+    }
+}
 
 function update_like_count(id) {
         

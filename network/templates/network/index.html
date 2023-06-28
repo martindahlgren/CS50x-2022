@@ -57,8 +57,11 @@
 <div class="post">
     <a href="{% url 'user' post.user %}">{{ post.user }}</a><br/>
     <span class="timestamp" data-timezone="utc">{{ post.timestamp_utc }}</span><br/>
-    {{ post.body|linebreaks }}
+    <span style="white-space: pre-wrap;" id="post-content-{{post.id}}">{{ post.body }}</span><br/>
     <a href class="like-button" data-post-id="{{post.id}}">❤️ <span id="like-count-{{post.id}}">{{post.n_likes}}</span><a href>
+    {% if post.user == user %}
+        <a href class="edit-button" id="edit-btn-{{post.id}}" data-post-id="{{post.id}}">Edit</a>
+    {% endif %}
 </div>
 {% endfor %}
 

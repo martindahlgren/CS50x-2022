@@ -23,6 +23,12 @@ html {
     margin: 7px;   
 }
 
+.editarea {
+    resize: auto;
+    min-width: 50%;
+    min-height: 80px;
+}
+
 .center-container {
     min-width: 50%;
     max-width: 75%;
