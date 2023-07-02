@@ -103,6 +103,23 @@ def post(request):
 
 @login_required
 @require_POST
+def edit(request, post_id):
+    data = json.loads(request.body)
+    post_pody = data["post"]
+    if post_pody == "":
+        return JsonResponse({"error": "Empty Post"}, status=400)
+    post_db = models.Post.objects.get(id=post_id)
+    if post_db.user != request.user:
+            return JsonResponse({"error": "Access Violation"}, status=403)
+
+    post_db.body = post_pody
+    post_db.save(update_fields=["body"])
+
+    return JsonResponse({"TODO": "TODO"}, status=201)
+
+
+@login_required
+@require_POST
 def like(request):
     data = json.loads(request.body)
     user = request.user

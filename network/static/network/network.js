@@ -67,8 +67,16 @@ function edit_post_pressed(post_id) {
         content_item.appendChild(newText);
         edit_btn.innerHTML = "Edit"
         edit_btn.onclick = () => {edit_post_pressed(post_id); return false;};
-        // TODO: Send the textarea_item.value to a server
-        return false;
+
+        fetch(`/edit/${post_id}`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrftoken() },
+            credentials: 'same-origin', // Do not send CSRF token to another domain.
+            body: JSON.stringify({
+                post: textarea_item.value,
+            })
+    });
+    return false;
     }
 }
 
