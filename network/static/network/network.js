@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (response.status == 201) {
                     response.json().then(json => {
                         // TODO: Consider something cooler here :)
-                        window.location.replace(document.querySelector("#this-route").value);
+                        window.location.replace("/" + document.querySelector("#this-route").value);
                     })
                 }
             })
