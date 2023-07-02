@@ -49,7 +49,8 @@ def follow_toggle(request, viewed_user):
 
 
 def is_following(user, viewed_user):
-    result = models.Follow.objects.filter(follower=user, following=viewed_user).count() > 0
+    logged_in = user.is_authenticated
+    result = logged_in and (models.Follow.objects.filter(follower=user, following=viewed_user).count() > 0)
     return  result
 
 def user(request, viewed_user, page=1):
