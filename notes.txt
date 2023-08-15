@@ -1,0 +1,44 @@
+A dating website.
+
+After logging in you are shown 4 profiles. Select which ones you want to talk with and click Next.
+
+You get to know when there is a new match and then you can chat. You also get to know how many that person selected :) I.e. if they just click on everyone or if you are special.
+
+Every day at 6 PM (local timezone) new people appear if you were logged in some time the last 24h.
+
+-----
+Profile (*incl search settings)    Chat
+
+TODO:
+All annan web
+Algoritmen för matchingar :( :( :( (detta är nog svårt!)
+
+
+
+APIs:
+FindCity(partial_name)
+UploadPicture() # Upload a profile picture
+GetMatches() # Returns all the chats, including the most recent message of each, user_id of the chat etc
+GetChat(user_id) # Returns all messages in chat. Each message has an index
+SendChat(user_id, message) # Send a message to a match
+GetMoreChat(user_id, idx) # Returns next available message after the idx. After 10 seconds the server will close the connection if nothing comes in. The client can try again.
+GetSwipes(user_id) # Returns profiles, or information that you need to wait (expiry point in UTC)
+SendSwipes([user_id]) # Which ones the user said yes to. Server will check that these are the currently possible swipes.
+GetMyProfile()
+GetProfile(user_id)
+SetProfile(...)
+BlockUser(user_id) # Block a user - will delete chat, only accepted if you have a match, this is irreversible, block again accepted without error :)
+
+DB Models:
+
+User (lastactive)
+Pair(is_blocked, a, b)
+ChatMessage (content, Pair, sender, receiver, id)
+
+
+
+
+
+Note: cities500.zip from https://download.geonames.org/export/dump/            : all cities with a population > 500 or seats of adm div down to PPLA4 (ca 185.000), see 'geoname' table for columns
+
+TODO: Make a singleton class that handles the cities
