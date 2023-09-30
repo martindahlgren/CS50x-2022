@@ -3,6 +3,8 @@ from dataclasses import dataclass
 import os
 from functools import lru_cache
 import bisect
+from . import util_matching
+from .models import HalfPairing, SwipeState
 
 class _Cities():
 
@@ -12,7 +14,8 @@ class _Cities():
     class City():
         geonameid: int
         name: str
-        location: (float, float)
+        latitude: float
+        longitude: float
         country: str # ISO-3166 2-letter country code, 2 characters
         admin2: str # geonames admin2_code string
         population: int
@@ -54,7 +57,7 @@ class _Cities():
                     admin2_str = admin2_areas[country_code][admin1_code][admin2_code]
                 except KeyError:
                     admin2_str = None
-                city = self.City(geonameid, name, (latitude, longitude), country_code, admin2_str, population)
+                city = self.City(geonameid, name, latitude, longitude, country_code, admin2_str, population)
                 self.id_to_city[geonameid] = city
 
         # Sort firts by name then population
@@ -62,7 +65,7 @@ class _Cities():
         self.all_names = all_names_list
 
     def get_matches(self, partial, max_hits):
-        # Find cities with names starting with "max_hits". Might return more than max_hits
+        # Find cities with names starting with partial. Might return more than max_hits
         partial_low = partial.lower()
         matches = {} # id to list of matching strings
 
@@ -102,3 +105,29 @@ class _Cities():
         return self.id_to_city[id]
 
 cities = _Cities()
+
+def get_daily_swipes(user, day=None):
+    if day is None:
+        day = util_matching.latest_day
+    swipes = HalfPairing.objects.filter(this_user=user, matching_date=day).exclude(user_likes_swipee=SwipeState.NO)
+    return list(swipes)
+
+def serialize_swipe(halfpairing):
+    swipee = halfpairing.swipee
+    profile = halfpairing.swipee.profile
+    gender = str(profile.gender)
+    profile_picture = "" # TODO, URL to profile picture!
+    bio = profile.bio
+    location = profile.location
+    name = swipee.first_name+swipee.last_name
+
+    return {
+        "id": swipee.id,
+        "name": name,
+        "gender": gender,
+        "profile_picture": profile_picture,
+        "bio": bio,
+        "location": location,
+    }
+
+
