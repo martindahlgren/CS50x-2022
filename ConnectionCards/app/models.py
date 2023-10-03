@@ -10,7 +10,7 @@ class SwipeState(models.TextChoices):
 class Gender(models.TextChoices):
     MAN = "M", _("Man")
     WOMAN = "W", _("Woman")
-    OTHER = "O", _("Other")
+    OTHER = "O", _("Non-Binary")
 
 class UserProfile(models.Model):
     gender = models.CharField(
@@ -19,7 +19,7 @@ class UserProfile(models.Model):
     )
     into_men = models.BooleanField()
     into_women = models.BooleanField()
-    into_other = models.BooleanField()
+    into_nb = models.BooleanField()
 
     picture = models.FileField()
     bio = models.CharField(max_length=1500)
@@ -41,6 +41,9 @@ class HalfPairing(models.Model):
         default=SwipeState.TO_SWIPE,
     )
     other_half = models.OneToOneField('self', on_delete=models.CASCADE, null=True)
+    class Meta:
+        unique_together = [["this_user", "swipee"]]
+
 
 def add_pair(user_a, user_b, date):
     """ Convenience function to add a pair of HalfPairing """

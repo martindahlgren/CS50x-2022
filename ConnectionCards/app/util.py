@@ -61,7 +61,7 @@ class _Cities():
                 self.id_to_city[geonameid] = city
 
         # Sort firts by name then population
-        all_names_list.sort(key=lambda x: (x[0], self.id_to_city[x[2]].population))
+        all_names_list.sort(key=lambda x: (x[0], -self.id_to_city[x[2]].population))
         self.all_names = all_names_list
 
     def get_matches(self, partial, max_hits):
