@@ -105,14 +105,14 @@ current_swipes = [
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        test_user = User(username="Adam")
+        test_user = User(username="adam@example.com", password="test")
         test_user.first_name = "Adam"
         test_user.last_name = "Testersen"
         test_user.save()
         yesterday = datetime.datetime.now(datetime.timezone.utc).date() + datetime.timedelta(days=-1)
 
         for profile in already_matched_with:
-            new_user =  User(username=profile["name"], password="test")
+            new_user =  User(username=f"{profile['name'].lower()}@example.com", password="test")
             new_user.first_name = profile["name"]
             new_user.last_name = "Testsson"
 
