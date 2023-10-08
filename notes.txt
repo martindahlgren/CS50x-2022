@@ -44,6 +44,8 @@ Note: cities500.zip from https://download.geonames.org/export/dump/            :
 TODO: Make a singleton class that handles the cities, done!
 
 
+Done: Don't forget logout!
+
 How things work:
 
 Every day (GMT), a new set of pairs are generated. If the user logs in that day they can see the choices they have for that day. After logging in they have to wait until the new set to pick one.

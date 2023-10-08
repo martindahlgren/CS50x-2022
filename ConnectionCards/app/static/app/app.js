@@ -1,9 +1,20 @@
-function App() {
+function ProfileCard() {
     return (
-        <div>
-            Hello!
+      <div className="profilecard">
+        Test Data!
+      </div>
+    );
+}
+
+function SwipeApp() {
+    return (
+        <div class="profile_view">
+            <ProfileCard />
+            <ProfileCard />
+            <ProfileCard />
+            <ProfileCard />
         </div>
     );
 }
 
-ReactDOM.render(<App />, document.querySelector("#app"));
+ReactDOM.render(<SwipeApp />, document.querySelector("#app"));

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Card Layout</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .card-container {
+            box-sizing: border-box;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .card {
+            box-sizing: border-box;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: calc(25% - 20px); /* Four cards in a row */
+            max-width: 300px;
+            text-align: center;
+            transition: transform 0.1s;
+        }
+
+        @media screen and (max-width: 768px) {
+            .card {
+                width: 80%; /* Switch to a single column on smaller screens */
+                max-width: none;
+            }
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="card">
+            <h2>Card 1</h2>
+            <p>This is the content of Card 1.</p>
+        </div>
+        <div class="card">
+            <h2>Card 2</h2>
+            <p>This is the content of Card 2.</p>
+        </div>
+        <div class="card">
+            <h2>Card 3</h2>
+            <p>This is the content of Card 3.</p>
+        </div>
+        <div class="card">
+            <h2>Card 4</h2>
+            <p>This is the content of Card 4.</p>
+        </div>
+    </div>
+</body>
+</html>
