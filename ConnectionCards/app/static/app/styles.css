@@ -1,5 +1,5 @@
 .banner {
-    background-color: #3498db; /* Choose your desired background color */
+    background-color: #ff70ba; /* Choose your desired background color */
     padding: 10px;
     text-align: center;
 }
@@ -29,6 +29,10 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
+}
+
+#logo {
+    max-width: 300px;
 }
 
 .card {

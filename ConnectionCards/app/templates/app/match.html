@@ -1,9 +1,11 @@
 {% extends "app/layout.html" %}
 {% block body %}
 
-<h1 id=match_welcom_text>
-    Select Two Lovely Profiles<br><br>
+<img id="logo" src="/static/app/images/logo.png">
+<h1 id=match-welcome-text>
+    Select Two Lovely Profiles
 </h1>
+<br><br>
 <div class="card-container">
     <div class="card empty-card">
         <h2>Please Wait</h2>
@@ -18,5 +20,7 @@
         <h2>Please Wait</h2>
     </div>
 </div>
+
+<script src="/static/app/match.js"></script>
 
 {% endblock %}
