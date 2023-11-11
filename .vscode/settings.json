@@ -1,0 +1,7 @@
+{
+    "autopep8.args": [
+        "--max-line-length",
+        "110",
+        "--experimental"
+    ]
+}

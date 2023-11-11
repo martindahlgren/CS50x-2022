@@ -37,6 +37,23 @@
             transition: transform 0.1s;
         }
 
+        .empty-card {
+            color: #e3e3e3;
+            transform: scale(1);
+            overflow: hidden;
+        }
+
+        .empty-card::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        border-top: 2px solid #ccc; /* Adjust thickness and color as needed */
+        transform: translateY(-50%) rotate(-45deg);
+        z-index: -1;
+        }
+
         @media screen and (max-width: 768px) {
             .card {
                 width: 80%; /* Switch to a single column on smaller screens */
@@ -47,25 +64,32 @@
         .card:hover {
             transform: scale(1.05);
         }
+
+        .card > img {
+            max-width: 100%; /* Make the image responsive within the div */
+            max-height: 100%; /* Ensure the image doesn't exceed the div height */
+        }
     </style>
 </head>
 <body>
     <div class="card-container">
         <div class="card">
-            <h2>Card 1</h2>
-            <p>This is the content of Card 1.</p>
+            <img src="static/app/images/test_faces/tpdne%20(2).jpg">
+            <h2>Emily Johnson</h2>
+            <p>Passionate about art and photography. Seeking a creative soul to inspire and be inspired by.</p>
         </div>
         <div class="card">
-            <h2>Card 2</h2>
-            <p>This is the content of Card 2.</p>
+            <img src="static/app/images/test_faces/tpdne%20(3).jpg">
+            <h2>Sophia Wilson</h2>
+            <p>Fitness enthusiast and personal trainer. Looking for a workout buddy and maybe something more.</p>
         </div>
         <div class="card">
-            <h2>Card 3</h2>
-            <p>This is the content of Card 3.</p>
+            <img src="static/app/images/test_faces/tpdne%20(5).jpg">
+            <h2>Mia Clark</h2>
+            <p>Yoga enthusiast and meditation practitioner. Seeking someone who values mindfulness and inner peace.</p>
         </div>
-        <div class="card">
-            <h2>Card 4</h2>
-            <p>This is the content of Card 4.</p>
+        <div class="card empty-card">
+            <h2>No profile found</h2>
         </div>
     </div>
 </body>

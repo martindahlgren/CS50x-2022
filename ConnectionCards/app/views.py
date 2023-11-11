@@ -12,6 +12,16 @@ from . import models
 from django.views.decorators.http import require_http_methods, require_POST, require_safe
 
 def index(request):
+        return HttpResponseRedirect(reverse("match"))        
+
+def match_view(request):
+    if request.user.is_authenticated:
+        return render(request, "app/index.html")
+    else:
+        return HttpResponseRedirect(reverse("login"))        
+
+
+def messages_view(request):
     if request.user.is_authenticated:
         return render(request, "app/index.html")
     else:
