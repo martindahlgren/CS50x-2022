@@ -21,9 +21,9 @@ def match_view(request):
         return HttpResponseRedirect(reverse("login"))        
 
 
-def messages_view(request):
+def chat_view(request):
     if request.user.is_authenticated:
-        return render(request, "app/messages.html")
+        return render(request, "app/chat.html")
     else:
         return HttpResponseRedirect(reverse("login"))        
 

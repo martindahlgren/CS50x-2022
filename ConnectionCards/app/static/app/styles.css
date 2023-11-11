@@ -3,3 +3,76 @@
     padding: 10px;
     text-align: center;
 }
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.app-container {
+    flex-grow: 1; /* Allow the content to grow and take up remaining space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.card-container {
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.card {
+    box-sizing: border-box;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: calc(25% - 20px); /* Four cards in a row */
+    max-width: 300px;
+    text-align: center;
+    transition: transform 0.1s;
+}
+
+.empty-card {
+    color: #e3e3e3;
+    transform: scale(1);
+    overflow: hidden;
+}
+
+.empty-card::before {
+content: '';
+position: absolute;
+top: 50%;
+left: 0;
+right: 0;
+border-top: 2px solid #ccc; /* Adjust thickness and color as needed */
+transform: translateY(-50%) rotate(-45deg);
+z-index: -1;
+}
+
+@media screen and (max-width: 768px) {
+    .card {
+        width: 80%; /* Switch to a single column on smaller screens */
+        max-width: none;
+    }
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card > img {
+    max-width: 100%; /* Make the image responsive within the div */
+    max-height: 100%; /* Ensure the image doesn't exceed the div height */
+}
