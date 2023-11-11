@@ -16,14 +16,14 @@ def index(request):
 
 def match_view(request):
     if request.user.is_authenticated:
-        return render(request, "app/index.html")
+        return render(request, "app/match.html")
     else:
         return HttpResponseRedirect(reverse("login"))        
 
 
 def messages_view(request):
     if request.user.is_authenticated:
-        return render(request, "app/index.html")
+        return render(request, "app/messages.html")
     else:
         return HttpResponseRedirect(reverse("login"))        
 
