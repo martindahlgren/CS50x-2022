@@ -6,6 +6,8 @@ import bisect
 from . import util_matching
 from .models import HalfPairing, SwipeState
 
+MAX_SWIPES_PER_DAY = 2
+
 class _Cities():
 
     " Helps filtering for cities. Data source: geonames.org "
@@ -106,28 +108,43 @@ class _Cities():
 
 cities = _Cities()
 
-def get_daily_swipes(user, day=None):
+def get_n_swipes_left(user, day=None):
     if day is None:
         day = util_matching.latest_day
-    swipes = HalfPairing.objects.filter(this_user=user, matching_date=day).exclude(user_likes_swipee=SwipeState.NO)
-    return list(swipes)
+    swipes = HalfPairing.objects.filter(this_user=user, matching_date=day, user_likes_swipee=SwipeState.TO_SWIPE)
+    swipes = list(swipes)
+    n_already_swiped = len(list(HalfPairing.objects.filter(this_user=user, matching_date=day).exclude(user_likes_swipee=SwipeState.TO_SWIPE)))
+    if n_already_swiped > MAX_SWIPES_PER_DAY:
+        print(f"{user} swipes has swiped more than allowed! Server integrity error.")
+    n_swipes_left = MAX_SWIPES_PER_DAY - n_already_swiped
+    if n_swipes_left > len(swipes):
+        n_swipes_left = len(swipes)
+    return n_swipes_left
+
+def get_daily_swipes(user, day=None):
+    "Get swipes of the day, only the one where the user didn't swipe yet"
+    if day is None:
+        day = util_matching.latest_day
+    swipes = HalfPairing.objects.filter(this_user=user, matching_date=day, user_likes_swipee=SwipeState.TO_SWIPE)
+    swipes = list(swipes)
+    n_swipes_left = get_n_swipes_left(user, day)
+
+    return swipes, n_swipes_left
 
 def serialize_swipe(halfpairing):
     swipee = halfpairing.swipee
     profile = halfpairing.swipee.profile
     gender = str(profile.gender)
-    profile_picture = "" # TODO, URL to profile picture!
+    picture = profile.picture.url
     bio = profile.bio
     location = profile.location
-    name = swipee.first_name+swipee.last_name
+    name = swipee.first_name + " " + swipee.last_name
 
     return {
         "id": swipee.id,
         "name": name,
         "gender": gender,
-        "profile_picture": profile_picture,
+        "picture": picture,
         "bio": bio,
         "location": location,
     }
-
-

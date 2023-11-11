@@ -36,16 +36,16 @@ already_matched_with = [
      "location": 4644585},]
 
 current_swipes = [
-    {"name": "Emily", "gender": "Woman", "into_men": False, "into_women": True, "into_nb": False,
+    {"name": "Emily", "gender": "Woman", "into_men": True, "into_women": True, "into_nb": False,
      "bio": "Passionate about art and photography. Seeking a creative soul to inspire and be inspired by.",
-     "location": 5368361},
-    {"name": "Sophia", "gender": "Woman", "into_men": False, "into_women": True, "into_nb": False,
+     "location": 5368361, "picture":"static/app/images/test_faces/tpdne%20(2).jpg"},
+    {"name": "Sophia", "gender": "Woman", "into_men": True, "into_women": True, "into_nb": False,
      "bio": "Fitness enthusiast and personal trainer. Looking for a workout buddy and maybe something more.",
-     "location": 5391811},
-    {"name": "Mia", "gender": "Woman", "into_men": False, "into_women": True, "into_nb": False,
+     "location": 5391811,"picture":"static/app/images/test_faces/tpdne%20(3).jpg"},
+    {"name": "Mia", "gender": "Woman", "into_men": True, "into_women": True, "into_nb": False,
      "bio":
      "Yoga enthusiast and meditation practitioner. Seeking someone who values mindfulness and inner peace.",
-     "location": 4671654},]
+     "location": 4671654,"picture":"static/app/images/test_faces/tpdne%20(5).jpg"},]
 
 
 class Command(BaseCommand):
@@ -56,6 +56,8 @@ class Command(BaseCommand):
             first_name="Adam",
             last_name="Testersen")
         test_user.save()
+        today = datetime.datetime.now(
+            datetime.timezone.utc).date()
         yesterday = datetime.datetime.now(
             datetime.timezone.utc).date() + datetime.timedelta(days=-1)
 
@@ -80,5 +82,30 @@ class Command(BaseCommand):
             half_a, half_b = models.add_pair(test_user, new_user, yesterday)
             half_a.user_likes_swipee = "Y"
             half_b.user_likes_swipee = "Y"
+            half_a.save()
+            half_b.save()
+
+        for profile in current_swipes:
+            new_user = models.User.objects.create_user(
+                username=f"{profile['name'].lower()}@example.com",
+                password="test", first_name=profile["name"],
+                last_name="Testsson")
+            new_user.save()
+
+            new_profile = UserProfile(
+                gender=profile["gender"],
+                into_men=profile["into_men"],
+                into_women=profile["into_women"],
+                into_nb=profile["into_nb"],
+                bio=profile["bio"],
+                location=profile["location"],
+                picture=profile["picture"]
+            )
+            new_profile.save()
+            new_user.profile = new_profile
+            new_user.save()
+            half_a, half_b = models.add_pair(test_user, new_user, today)
+            half_a.user_likes_swipee = "T"
+            half_b.user_likes_swipee = "T"
             half_a.save()
             half_b.save()

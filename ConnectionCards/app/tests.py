@@ -36,7 +36,7 @@ class LocationMatchingTestCase(TestCase):
         self._add_user_a_matches()
         # See we can get back what we setp above
         user_a = User.objects.get(username="Anna")
-        daily_swipes = util.get_daily_swipes(user_a)
+        daily_swipes, n_left = util.get_daily_swipes(user_a)
         assert len(daily_swipes) == 1
         assert daily_swipes[0].this_user == user_a
         assert daily_swipes[0].swipee.username == "Bertil"
@@ -53,6 +53,6 @@ class LocationMatchingTestCase(TestCase):
         swipe = HalfPairing.objects.get(this_user=user_a, swipee=bertil_id)
         self.assertEqual(swipe.user_likes_swipee, models.SwipeState.NO)
 
-        daily_swipes = util.get_daily_swipes(user_a)
+        daily_swipes, n_left = util.get_daily_swipes(user_a)
         assert len(daily_swipes) == 0
         # TODO: Verify that the blocked user is not returned using any endpoint!

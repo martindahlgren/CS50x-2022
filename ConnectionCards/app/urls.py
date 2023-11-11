@@ -14,5 +14,7 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path("unmatch", views.unmatch_user),
     path("suggest_cities", views.suggest_cities),
+    path("get_candidates", views.get_candidates),
+    path("send_swipe", views.send_swipe),
     path("test", TemplateView.as_view(template_name="app/testpage.html")),
 ]

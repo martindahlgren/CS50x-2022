@@ -106,16 +106,27 @@ def get_more_messages(request):
 
 @login_required
 def get_candidates(request):
-    daily_swipes = util.get_daily_swipes(request.user)
+    daily_swipes, n_swipes_left = util.get_daily_swipes(request.user)
     if len(daily_swipes) > 4:
         return JsonResponse(status=400)
-
     return JsonResponse({"swipees": [util.serialize_swipe(hp) for hp in daily_swipes],
-                         "hours_to_next": util_matching.hours_until_next_day()})
+                         "hours_to_next": util_matching.hours_until_new_swipes(),
+                         "n_swipes_left": n_swipes_left})
 
 @login_required
-def send_swipes(request):
-    pass
+@require_POST
+def send_swipe(request):
+    data = json.loads(request.body)
+    swipee_id = data["id"]
+    swipe = HalfPairing.objects.get(this_user=request.user, swipee=swipee_id)
+    assert swipe.user_likes_swipee == models.SwipeState.TO_SWIPE
+    assert swipe.matching_date == util_matching.latest_day # Only allowed to swipe on the matches of today
+    swipe.user_likes_swipee = models.SwipeState.YES
+    swipe.save()
+    match_already = (swipe.other_half.user_likes_swipee == models.SwipeState.YES)
+    swipes_left = util.get_n_swipes_left(request.user)
+    return JsonResponse({"match_already": match_already, "swipes_left": swipes_left})
+
 
 @login_required
 def get_my_profile(request):
