@@ -10,25 +10,24 @@ class SwipeState(models.TextChoices):
 class Gender(models.TextChoices):
     MAN = "M", _("Man")
     WOMAN = "W", _("Woman")
-    OTHER = "O", _("Non-Binary")
+    OTHER = "O", _("Other")
 
 class UserProfile(models.Model):
-    gender = models.CharField(
-        max_length=1,
-        choices=Gender.choices,
-    )
     into_men = models.BooleanField()
     into_women = models.BooleanField()
     into_nb = models.BooleanField()
-
     picture = models.FileField()
-    bio = models.CharField(max_length=1500)
+    bio = models.CharField(max_length=300)
     # Location is a GeoNames id
     location = models.IntegerField()
 
 class User(AbstractUser):
     id = models.BigAutoField(primary_key=True)
-    profile = models.OneToOneField(UserProfile, null=True,
+    gender = models.CharField(
+        max_length=1,
+        choices=Gender.choices,
+    )
+    profile = models.OneToOneField(UserProfile, null=True, blank=True,
                                     on_delete=models.CASCADE)
 
 class HalfPairing(models.Model):

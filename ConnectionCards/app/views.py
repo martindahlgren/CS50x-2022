@@ -10,18 +10,32 @@ from . import util, util_matching
 from .models import HalfPairing
 from . import models
 from django.views.decorators.http import require_http_methods, require_POST, require_safe
+from django.db import transaction
 
 def index(request):
+        """index view"""
         return HttpResponseRedirect(reverse("match"))        
 
 def match_view(request):
+    """match view"""
     if request.user.is_authenticated:
         return render(request, "app/match.html")
     else:
         return HttpResponseRedirect(reverse("login"))        
 
+@login_required
+def edit_profile(request):
+    """Edit profile view and post"""
+    name = request.user.first_name + " " + request.user.last_name
+    return render(request, "app/edit_profile.html",
+                  {
+                      "name": name,
+                      "gender": request.user.get_gender_display()
+                  })
+
 
 def chat_view(request):
+    """chat view"""
     if request.user.is_authenticated:
         return render(request, "app/chat.html")
     else:
@@ -29,6 +43,7 @@ def chat_view(request):
 
 
 def login_view(request):
+    """login view"""
     if request.method == "POST":
 
         # Attempt to sign user in
@@ -49,15 +64,18 @@ def login_view(request):
 
 
 def logout_view(request):
+    """logout view"""
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
 
 def register(request):
+    """register view"""
     if request.method == "POST":
         email = request.POST["email"]
         first_name = request.POST["firstname"]
         last_name = request.POST["lastname"]
+        gender = request.POST["gender"]
 
         # Ensure password matches confirmation
         password = request.POST["password"]
@@ -66,16 +84,24 @@ def register(request):
             return render(request, "app/register.html", {
                 "message": "Passwords must match."
             })
+        
+        if not gender in models.Gender.values:
+            return render(request, "app/register.html", {
+                "message": "Please select gender."
+            })
 
         # Attempt to create new user
-        try:
-            user = models.User.objects.create_user(username=email, email=email, password=password, first_name=first_name, last_name=last_name)
-            user.save()
-        except IntegrityError as e:
-            print(e)
-            return render(request, "app/register.html", {
-                "message": "Email address already used."
-            })
+        with transaction.atomic():
+            if models.User.objects.filter(username=email).exists():
+                return render(request, "app/register.html", {
+                    "message": "Email address already used."
+                })
+            else:
+                user = models.User.objects.create_user(username=email, email=email, password=password, first_name=first_name, last_name=last_name, gender=gender)
+                user.full_clean()
+                user.save()
+
+        # User created, let's log in
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
@@ -86,10 +112,6 @@ def register(request):
 
 @login_required
 def upload_picture(request):
-    pass
-
-@login_required
-def get_matches(request):
     pass
 
 @login_required
@@ -128,15 +150,6 @@ def send_swipe(request):
     match_already = (swipe.other_half.user_likes_swipee == models.SwipeState.YES)
     swipes_left = util.get_n_swipes_left(request.user)
     return JsonResponse({"match_already": match_already, "n_swipes_left": swipes_left})
-
-
-@login_required
-def get_my_profile(request):
-    pass
-
-@login_required
-def update_profile(request):
-    pass
 
 @login_required
 @require_POST

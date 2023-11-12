@@ -134,8 +134,8 @@ def get_daily_swipes(user, day=None):
 
 def serialize_swipe(halfpairing):
     swipee = halfpairing.swipee
-    profile = halfpairing.swipee.profile
-    gender = str(profile.gender)
+    profile = swipee.profile
+    gender = str(swipee.gender)
     picture = profile.picture.url
     bio = profile.bio
     location = profile.location
