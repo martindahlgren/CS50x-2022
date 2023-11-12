@@ -1,3 +1,5 @@
+var no_more_matching = false
+
 document.addEventListener('DOMContentLoaded', function () {
   console.log("Page has loaded!")
 
@@ -25,6 +27,16 @@ function no_profiles(data)
 
 function on_click_card(card_html)
 {
+  if (card_html.classList.contains("clicked-card"))
+  {
+    return;
+  }
+  if (no_more_matching)
+  {
+    return;
+  }
+
+  card_html.classList.add("clicked-card")
   fetch('/send_swipe', {
     method: 'POST',
     headers: { 'X-CSRFToken': csrftoken },
@@ -32,13 +44,30 @@ function on_click_card(card_html)
     body: JSON.stringify({
       "id": card_html.dataset.id,
     })
-    
-})
-// TODO: Do something cool here :)
-/*.then(response => {
+  }).then(response => {
+    if (response.ok) {
+      return response.json();
+    }
+  }).then(data => {
+    if(data.match_already)
+    {
+      change_text("You got a match! Let's go make some conversation.");
+    }
+    else if(data.n_swipes_left != 0 )
+    {
+      change_text("Check Messages later to find out if you got a match");
+    }
+    else
+    {
+      change_text("You have no clicks left. Come by Messages later!");
+    }
+    if (data.n_swipes_left == 0)
+    {
+      no_more_matching = true
+    }
+  });
 
-})
-*/
+
 }
 
 
@@ -52,7 +81,7 @@ function fill_matches(data)
   swipees = data.swipees
   for (const [index, swipee] of swipees.entries()) {
     console.log(swipee)
-    card_html = cards_html[index]
+    let card_html = cards_html[index]
     card_html.classList.remove('empty-card');
     card_html.dataset = card_html.dataset || {}
     card_html.dataset.id = swipee.id;
@@ -63,8 +92,9 @@ function fill_matches(data)
       card_html.onclick = (() => on_click_card(card_html));
     }
 
-  for (const card of document.querySelectorAll('.empty-card')) {
-    card.innerText = "No profile available";
+  for (const card_html of document.querySelectorAll('.empty-card')) {
+    card_html.innerText = "No profile available";
+    delete card_html.onclick
   }
 
 }

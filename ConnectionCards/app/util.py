@@ -114,9 +114,10 @@ def get_n_swipes_left(user, day=None):
     swipes = HalfPairing.objects.filter(this_user=user, matching_date=day, user_likes_swipee=SwipeState.TO_SWIPE)
     swipes = list(swipes)
     n_already_swiped = len(list(HalfPairing.objects.filter(this_user=user, matching_date=day).exclude(user_likes_swipee=SwipeState.TO_SWIPE)))
-    if n_already_swiped > MAX_SWIPES_PER_DAY:
-        print(f"{user} swipes has swiped more than allowed! Server integrity error.")
     n_swipes_left = MAX_SWIPES_PER_DAY - n_already_swiped
+    if n_already_swiped > MAX_SWIPES_PER_DAY:
+        n_swipes_left = 0
+        print(f"{user} swipes has swiped more than allowed! Server integrity error.")
     if n_swipes_left > len(swipes):
         n_swipes_left = len(swipes)
     return n_swipes_left

@@ -59,6 +59,10 @@ body {
     overflow: hidden;
 }
 
+.clicked-card {
+    background-color: #e4aaff;
+}
+
 .empty-card::before {
 content: '';
 position: absolute;

@@ -119,13 +119,15 @@ def send_swipe(request):
     data = json.loads(request.body)
     swipee_id = data["id"]
     swipe = HalfPairing.objects.get(this_user=request.user, swipee=swipee_id)
-    assert swipe.user_likes_swipee == models.SwipeState.TO_SWIPE
+    swipes_left = util.get_n_swipes_left(request.user)
+    assert swipes_left != 0 # Limiting swiping is the point
+    assert swipe.user_likes_swipee == models.SwipeState.TO_SWIPE # Don't allow selecting the same user
     assert swipe.matching_date == util_matching.latest_day # Only allowed to swipe on the matches of today
     swipe.user_likes_swipee = models.SwipeState.YES
     swipe.save()
     match_already = (swipe.other_half.user_likes_swipee == models.SwipeState.YES)
     swipes_left = util.get_n_swipes_left(request.user)
-    return JsonResponse({"match_already": match_already, "swipes_left": swipes_left})
+    return JsonResponse({"match_already": match_already, "n_swipes_left": swipes_left})
 
 
 @login_required
