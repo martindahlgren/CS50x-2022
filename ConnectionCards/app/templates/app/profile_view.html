@@ -1,0 +1,45 @@
+{% extends "app/layout.html" %}
+{% block body %}
+
+<h1>Edit Profile</h1>
+{% if message %}
+<div id="edit-profile-message">{{message}}</div>
+{% endif %}
+
+
+<!-- Forms that cannot be edited -->
+<div>
+<label for="name">Name:</label>
+<input type="text" id="name" disabled placeholder="{{name}}">
+<label for="gender">Gender:</label>
+<input type="text" id="gender" disabled placeholder="{{gender}}">
+</div>
+
+<img src="{{profile.picture}}" width=210px>
+
+<form id="edit-profile-form">
+  <p>
+    <label for="into_men">Interested in Men:</label>
+    <input type="checkbox" id="into_men" name="into_men" {% if profile.into_men %}checked{% endif %}>
+  </p>
+  <p>
+    <label for="into_women">Interested in Women:</label>
+    <input type="checkbox" id="into_women" name="into_women" {% if profile.into_women %}checked{% endif %}>
+  </p>
+  <p>
+    <label for="into_nb">Interested in Other:</label>
+    <input type="checkbox" id="into_nb" name="into_nb" {% if profile.into_nb %}checked{% endif %}>
+  </p>
+  <p>
+  <textarea name="bio" cols="40" rows="10" required id="bio" maxlength="300">TODO</textarea>
+  </p>
+
+
+  <div id="edit-profile-btn-container"><button type="submit" >Save</button></div>
+  </form>
+  <div id="message"></div>
+
+  <script src="/static/app/profile.js"></script>
+
+
+{% endblock %}

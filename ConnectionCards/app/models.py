@@ -13,13 +13,13 @@ class Gender(models.TextChoices):
     OTHER = "O", _("Other")
 
 class UserProfile(models.Model):
-    into_men = models.BooleanField()
-    into_women = models.BooleanField()
-    into_nb = models.BooleanField()
-    picture = models.FileField()
-    bio = models.CharField(max_length=300)
+    into_men = models.BooleanField(default=False)
+    into_women = models.BooleanField(default=False)
+    into_nb = models.BooleanField(default=False)
+    picture = models.FileField(default="static/app/images/placeholder.png")
+    bio = models.CharField(max_length=300, default="")
     # Location is a GeoNames id
-    location = models.IntegerField()
+    location = models.IntegerField(default=0)
 
 class User(AbstractUser):
     id = models.BigAutoField(primary_key=True)

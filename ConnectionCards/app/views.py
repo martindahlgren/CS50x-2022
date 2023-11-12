@@ -11,6 +11,8 @@ from .models import HalfPairing
 from . import models
 from django.views.decorators.http import require_http_methods, require_POST, require_safe
 from django.db import transaction
+from django import forms
+
 
 def index(request):
         """index view"""
@@ -24,14 +26,35 @@ def match_view(request):
         return HttpResponseRedirect(reverse("login"))        
 
 @login_required
-def edit_profile(request):
-    """Edit profile view and post"""
+def profile_view(request):
+    """Edit profile view"""
+    user = request.user
+    if not request.user.profile:
+        # Create missing profile
+        profile = models.UserProfile.objects.create()
+        profile.save()
+        user.profile = profile
+        user.save()
+
     name = request.user.first_name
-    return render(request, "app/edit_profile.html",
+    return render(request, "app/profile_view.html",
                   {
                       "name": name,
-                      "gender": request.user.get_gender_display()
+                      "gender": request.user.get_gender_display(),
+                      "profile": request.user.profile
                   })
+
+
+@login_required
+@require_POST
+def profile_update(request):
+    data = json.loads(request.body)
+    profile = request.user.profile
+    profile.into_men = data["into_men"]
+    profile.into_women = data["into_women"]
+    profile.into_nb = data["into_nb"]
+    profile.save()
+    return JsonResponse({"message": "Profile updated."}, status=200)
 
 
 def chat_view(request):
