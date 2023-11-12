@@ -26,7 +26,7 @@ def match_view(request):
 @login_required
 def edit_profile(request):
     """Edit profile view and post"""
-    name = request.user.first_name + " " + request.user.last_name
+    name = request.user.first_name
     return render(request, "app/edit_profile.html",
                   {
                       "name": name,
@@ -74,7 +74,6 @@ def register(request):
     if request.method == "POST":
         email = request.POST["email"]
         first_name = request.POST["firstname"]
-        last_name = request.POST["lastname"]
         gender = request.POST["gender"]
 
         # Ensure password matches confirmation
@@ -97,7 +96,7 @@ def register(request):
                     "message": "Email address already used."
                 })
             else:
-                user = models.User.objects.create_user(username=email, email=email, password=password, first_name=first_name, last_name=last_name, gender=gender)
+                user = models.User.objects.create_user(username=email, email=email, password=password, first_name=first_name, gender=gender)
                 user.full_clean()
                 user.save()
 

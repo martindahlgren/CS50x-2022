@@ -139,7 +139,7 @@ def serialize_swipe(halfpairing):
     picture = profile.picture.url
     bio = profile.bio
     location = profile.location
-    name = swipee.first_name + " " + swipee.last_name
+    name = swipee.first_name
 
     return {
         "id": swipee.id,

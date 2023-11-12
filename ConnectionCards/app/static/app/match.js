@@ -87,7 +87,7 @@ function fill_matches(data)
     card_html.dataset.id = swipee.id;
     card_html.innerHTML = 
       `<img src="${swipee.picture}">
-      <h2>${swipee.name}</h2>
+      <h2 class=profile-name>${swipee.name}</h2>
       <p>${swipee.bio}</p>`;
       card_html.onclick = (() => on_click_card(card_html));
     }

@@ -53,8 +53,9 @@ class Command(BaseCommand):
         test_user = models.User.objects.create_user(
             username="adam@example.com",
             password="test",
-            first_name="Adam",
-            last_name="Testersen")
+            gender="M",
+            first_name="Adam")
+        test_user.full_clean()
         test_user.save()
         today = datetime.datetime.now(
             datetime.timezone.utc).date()
@@ -65,7 +66,6 @@ class Command(BaseCommand):
             new_user = models.User.objects.create_user(
                 username=f"{profile['name'].lower()}@example.com",
                 password="test", first_name=profile["name"],
-                last_name="Testsson",
                 gender=profile["gender"])
             new_user.full_clean()
             new_user.save()
@@ -91,7 +91,6 @@ class Command(BaseCommand):
             new_user = models.User.objects.create_user(
                 username=f"{profile['name'].lower()}@example.com",
                 password="test", first_name=profile["name"],
-                last_name="Testsson",
                 gender=profile["gender"])
             new_user.full_clean()
             new_user.save()
