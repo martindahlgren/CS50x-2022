@@ -88,8 +88,10 @@ function fill_matches(data)
     card_html.innerHTML = 
       `<img src="${swipee.picture}">
       <h2 class=profile-name>${swipee.name}</h2>
-      <p>${swipee.bio}</p>`;
+      <p id=profiletext_${index}></p>`;
       card_html.onclick = (() => on_click_card(card_html));
+      document.querySelector(`#profiletext_${index}`).innerText = swipee.bio;
+      
     }
 
   for (const card_html of document.querySelectorAll('.empty-card')) {

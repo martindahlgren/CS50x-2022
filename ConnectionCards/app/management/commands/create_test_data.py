@@ -77,6 +77,7 @@ class Command(BaseCommand):
                 bio=profile["bio"],
                 location=profile["location"],
             )
+
             new_profile.save()
             new_user.profile = new_profile
             new_user.full_clean()

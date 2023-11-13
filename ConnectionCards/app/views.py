@@ -53,6 +53,7 @@ def profile_update(request):
     profile.into_men = data["into_men"]
     profile.into_women = data["into_women"]
     profile.into_nb = data["into_nb"]
+    profile.bio = data["bio"]
     profile.save()
     return JsonResponse({"message": "Profile updated."}, status=200)
 

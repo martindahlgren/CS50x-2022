@@ -135,6 +135,8 @@ def get_daily_swipes(user, day=None):
 def serialize_swipe(halfpairing):
     swipee = halfpairing.swipee
     profile = swipee.profile
+    if not profile:
+        print("There are users without a profile shown to others!")
     gender = str(swipee.gender)
     picture = profile.picture.url
     bio = profile.bio
