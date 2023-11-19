@@ -15,7 +15,14 @@
 <input type="text" id="gender" disabled placeholder="{{gender}}">
 </div>
 
-<img src="{{profile.picture}}" width=210px>
+<img src="{{profile.picture.url}}" width=210px>
+<form action="{% url 'upload_picture' %}" method="post" enctype="multipart/form-data">
+  <label for="file">Profile Picture</label>
+  <input id="file" name="file" type="file" />
+  {% csrf_token %}
+  <button>Upload</button>
+</form>
+
 
 <form id="edit-profile-form">
   <p>

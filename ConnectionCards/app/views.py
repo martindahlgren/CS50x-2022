@@ -130,12 +130,20 @@ def register(request):
     else:
         return render(request, "app/register.html")
 
-
-
+class UploadFileForm(forms.Form):
+    file = forms.ImageField()
 
 @login_required
+@require_POST
 def upload_picture(request):
-    pass
+    if request.method == "POST":
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            profile = request.user.profile
+            profile.picture = request.FILES['file']
+            print(profile.picture.url)
+            profile.save()
+    return HttpResponseRedirect(reverse("index"))
 
 @login_required
 def get_chat(request):

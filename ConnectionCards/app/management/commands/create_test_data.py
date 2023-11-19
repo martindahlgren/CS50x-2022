@@ -38,14 +38,14 @@ already_matched_with = [
 current_swipes = [
     {"name": "Emily", "gender": "W", "into_men": True, "into_women": True, "into_nb": False,
      "bio": "Passionate about art and photography. Seeking a creative soul to inspire and be inspired by.",
-     "location": 5368361, "picture":"static/app/images/test_faces/tpdne%20(2).jpg"},
+     "location": 5368361, "picture":"images/test_faces/tpdne (2).jpg"},
     {"name": "Sophia", "gender": "W", "into_men": True, "into_women": True, "into_nb": False,
      "bio": "Fitness enthusiast and personal trainer. Looking for a workout buddy and maybe something more.",
-     "location": 5391811,"picture":"static/app/images/test_faces/tpdne%20(3).jpg"},
+     "location": 5391811,"picture":"images/test_faces/tpdne (3).jpg"},
     {"name": "Mia", "gender": "W", "into_men": True, "into_women": True, "into_nb": False,
      "bio":
      "Yoga enthusiast and meditation practitioner. Seeking someone who values mindfulness and inner peace.",
-     "location": 4671654,"picture":"static/app/images/test_faces/tpdne%20(5).jpg"},]
+     "location": 4671654,"picture":"images/test_faces/tpdne (5).jpg"},]
 
 
 class Command(BaseCommand):

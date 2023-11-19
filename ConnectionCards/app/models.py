@@ -16,7 +16,7 @@ class UserProfile(models.Model):
     into_men = models.BooleanField(default=False)
     into_women = models.BooleanField(default=False)
     into_nb = models.BooleanField(default=False)
-    picture = models.FileField(default="static/app/images/placeholder.png")
+    picture = models.ImageField(default="images/placeholder.png", upload_to="images/user_upload")
     bio = models.CharField(max_length=300, default="")
     # Location is a GeoNames id
     location = models.IntegerField(default=0)

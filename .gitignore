@@ -6,7 +6,8 @@ network.zip
 *.pyc
 __pycache__
 db.sqlite3
-media
+
+ConnectionCards/media/images/user_upload
 
 # Backup files # 
 *.bak 
