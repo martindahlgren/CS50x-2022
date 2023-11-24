@@ -41,9 +41,9 @@ def profile_view(request):
                   {
                       "name": name,
                       "gender": request.user.get_gender_display(),
-                      "profile": request.user.profile
+                      "profile": request.user.profile,
+                      "location_str": cities.from_id(request.user.profile.location).displayname() if request.user.profile.location else ""
                   })
-
 
 @login_required
 @require_POST
@@ -54,6 +54,11 @@ def profile_update(request):
     profile.into_women = data["into_women"]
     profile.into_nb = data["into_nb"]
     profile.bio = data["bio"]
+    location = int(data["location"]) or None
+    if not location or location not in cities.id_to_city:
+        return JsonResponse(status=400)
+    profile.location = location
+
     profile.save()
     return JsonResponse({"message": "Profile updated."}, status=200)
 
@@ -192,10 +197,9 @@ def unmatch_user(request):
     swipe.save()
     return JsonResponse({})
 
-@require_safe
 def suggest_cities(request):
     # request format {"vänersbo"} => {possible_cities: [{display_name: 'Vänersborg, Vänersborgs Kommun, SE', city_id:2665171}]}
     data = json.loads(request.body)
-    matches = cities.get_matches(data.city, 10)
+    matches = cities.get_matches(data["filter"], 10)
     response = {"possible_cities":[ {"display_name": m[0], "city_id": m[1].geonameid} for m in matches]}
     return JsonResponse(response)

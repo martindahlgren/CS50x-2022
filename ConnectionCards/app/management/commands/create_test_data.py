@@ -57,6 +57,20 @@ class Command(BaseCommand):
             first_name="Adam")
         test_user.full_clean()
         test_user.save()
+        
+        new_profile = UserProfile(
+            into_men=False,
+            into_women=True,
+            into_nb=False,
+            bio="",
+            location=2665171,
+        )
+
+        new_profile.save()
+        test_user.profile = new_profile
+        test_user.full_clean()
+        test_user.save()
+
         today = datetime.datetime.now(
             datetime.timezone.utc).date()
         yesterday = datetime.datetime.now(

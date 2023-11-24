@@ -11,11 +11,16 @@ class LocationMatchingTestCase(TestCase):
     def setUp(self):
         pass
 
-
     def test_can_get_vänersborg(self):
         """ Try retrieving the list of cities starting with vä """
         city_matches = util.cities.get_matches("vän", 10)
-        assert (str(city_matches)) == "[('Vänersborg, Vänersborgs Kommun, SE', _Cities.City(geonameid=2665171, name='Vänersborg', latitude='58.38075', longitude='12.3234', country='SE', admin2='Vänersborgs Kommun', population=23119)), ('Vännäs, Vännäs Kommun, SE', _Cities.City(geonameid=2665093, name='Vännäs', latitude='63.90676', longitude='19.75712', country='SE', admin2='Vännäs Kommun', population=4373)), ('Vändra, Põhja-Pärnumaa vald, EE', _Cities.City(geonameid=587440, name='Vändra', latitude='58.64806', longitude='25.03611', country='EE', admin2='Põhja-Pärnumaa vald', population=2544)), ('Vännäsby, Vännäs Kommun, SE', _Cities.City(geonameid=2665090, name='Vännäsby', latitude='63.91564', longitude='19.82438', country='SE', admin2='Vännäs Kommun', population=1581)), ('Vänqli (Vank), AZ', _Cities.City(geonameid=584747, name='Vank', latitude='40.05275', longitude='46.54419', country='AZ', admin2=None, population=1335))]"
+        city_matches_display = [(displayname, city.geonameid) for (displayname, city) in city_matches]
+        assert city_matches_display == [("Vänersborg, Vänersborgs Kommun, SE", 2665171), ('Vännäs, Vännäs Kommun, SE', 2665093), ('Vändra, Põhja-Pärnumaa vald, EE', 587440), ('Vännäsby, Vännäs Kommun, SE', 2665090), ('Vänqli (Vank), AZ',584747)]
+
+    def test_limit_hits(self):
+        """ Try retrieving the list of cities starting with vä """
+        city_matches = util.cities.get_matches("", 10)
+        assert len(city_matches) == 10
 
 
     def _add_user_a_matches(self):

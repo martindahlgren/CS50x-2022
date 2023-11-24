@@ -15,7 +15,6 @@ urlpatterns = [
     path("profile", views.profile_view, name="profile"),
     path("profileupdate", views.profile_update, name="profileupdate"),
     path("upload_picture", views.upload_picture, name="upload_picture"),
-
     path("unmatch", views.unmatch_user),
     path("suggest_cities", views.suggest_cities),
     path("get_candidates", views.get_candidates),

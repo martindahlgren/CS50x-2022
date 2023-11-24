@@ -40,7 +40,17 @@
   <p>
   <textarea name="bio" cols="40" rows="10" required id="bio" maxlength="300">{{ profile.bio|escape }}</textarea>
   </p>
-
+  <p>
+    <label for="city-filter">Filter City</label>
+    <input type="text" id="city-filter" name="city-filter">
+  </p>
+  <div id="cities-radios">
+    <div>
+    <input type="radio" name="city" id="city_{{ profile.location }}" value="{{ profile.location }}" checked />
+    <label for="city_{{ profile.location }}">{{ location_str }}</label>
+    </div>
+  </div>
+  
 
   <div id="edit-profile-btn-container"><button type="submit" >Save</button></div>
   </form>

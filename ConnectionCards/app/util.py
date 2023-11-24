@@ -16,15 +16,35 @@ class _Cities():
     class City():
         geonameid: int
         name: str
+        asciiname: str
+        alternatenames: [str]
         latitude: float
         longitude: float
         country: str # ISO-3166 2-letter country code, 2 characters
+        admin1: str # geonames admin1_code string
         admin2: str # geonames admin2_code string
         population: int
+
+        def displayname(self):
+            displayname = self.name
+            if self.admin1:
+                displayname += f", {self.admin1}"
+            if self.admin2:
+                displayname += f", {self.admin2}"
+            displayname += f", {self.country}"
+            return displayname
 
     def __init__(self):
         self.id_to_city = {}
         self.all_names = {} # All names and ids [(lowercasename, Name, id)]
+
+        admin1_areas = {}
+        FILEPATH_ADMIN1=os.path.dirname(__file__) + '/admin1codesASCII.txt'
+        with open(FILEPATH_ADMIN1, 'r', encoding='utf-8') as admin1_file:
+            for line in admin1_file.readlines():
+                (concatenated_code, name, name_ascii, geonameid) = line.split("\t")
+                (country, admin1) = concatenated_code.split(".")
+                admin1_areas.setdefault(country, {})[admin1] = name
 
         admin2_areas = {}
         FILEPATH_ADMIN2=os.path.dirname(__file__) + '/admin2codes.txt'
@@ -37,6 +57,7 @@ class _Cities():
         FILEPATH=os.path.dirname(__file__) + '/cities500.txt'
 
         all_names_list = []
+        cities = []
         with open(FILEPATH, 'r', encoding='utf-8') as citiesfile:
             for line in citiesfile.readlines():
                 (geonameid, name, asciiname, alternatenames, latitude,
@@ -46,27 +67,51 @@ class _Cities():
                 geonameid = int(geonameid)
                 population = int(population)
 
-                if name:
-                    all_names_list.append((name.lower(), name, geonameid))
-                if asciiname:
-                    all_names_list.append((asciiname.lower(), asciiname, geonameid))
-
-                for alternatename in alternatenames.split(','):
-                    if alternatename:
-                        all_names_list.append((alternatename.lower(), alternatename, geonameid))
-
+                try:
+                    admin1_str = admin1_areas[country_code][admin1_code]
+                except KeyError:
+                    admin1_str = None
                 try:
                     admin2_str = admin2_areas[country_code][admin1_code][admin2_code]
                 except KeyError:
                     admin2_str = None
-                city = self.City(geonameid, name, latitude, longitude, country_code, admin2_str, population)
-                self.id_to_city[geonameid] = city
+                alternatenames=alternatenames.split(",") if alternatenames else []
+                city = self.City(geonameid=geonameid,
+                                 name=name,
+                                 asciiname=asciiname,
+                                 latitude=latitude,
+                                 longitude=longitude,
+                                 country=country_code,
+                                 alternatenames=alternatenames,
+                                 admin2=admin2_str,
+                                 admin1=admin1_str,
+                                 population=population)
+                cities.append(city)
+
+        # Remove things with the same name. Sorry people who live there :)
+        cities.sort(key=lambda x: (-x.population))
+        displaynames = set()
+        for city in cities:
+            displayname = city.displayname()
+
+            if displayname not in displaynames:
+                self.id_to_city[city.geonameid] = city
+
+                # Store all names in the big list of names
+                if city.name:
+                    all_names_list.append((city.name.lower(), city.name, city.geonameid))
+                if city.asciiname:
+                        all_names_list.append((city.asciiname.lower(), city.asciiname, city.geonameid))
+                for alternatename in city.alternatenames:
+                    all_names_list.append((alternatename.lower(), alternatename, city.geonameid))
 
         # Sort firts by name then population
         all_names_list.sort(key=lambda x: (x[0], -self.id_to_city[x[2]].population))
         self.all_names = all_names_list
 
     def get_matches(self, partial, max_hits):
+        if partial == "":
+            return []
         # Find cities with names starting with partial. Might return more than max_hits
         partial_low = partial.lower()
         matches = {} # id to list of matching strings
@@ -140,7 +185,6 @@ def serialize_swipe(halfpairing):
     gender = str(swipee.gender)
     picture = profile.picture.url
     bio = profile.bio
-    location = profile.location
     name = swipee.first_name
 
     return {
@@ -149,5 +193,4 @@ def serialize_swipe(halfpairing):
         "gender": gender,
         "picture": picture,
         "bio": bio,
-        "location": location,
     }
