@@ -5,6 +5,7 @@ from django.db.models import Max
 import random
 import time
 import threading
+import weakref
 
 MATCHMAKING_SECONDS_BEFORE_NEW_DAY = 5*60 # 5 minutes
 MAX_NR_MATCHES = 4
@@ -17,12 +18,21 @@ print(f"Matching for {active_day} is valid now")
 lock = threading.Lock()
 matchmaking_thread = None
 
+class ThreadWrapper:
+    def __init__(self, func):
+        self.stop_condition = threading.Event()
+        self.thread = threading.Thread(target=func, args=(weakref.ref(self.stop_condition), ), daemon=True)
+        self.thread.start()
+
+    def __del__(self):
+        self.stop_condition.set()
+        self.thread.join()
+        print("Background thread exited")
+
 def seconds_until_new_swipes():
     current_utc_time = datetime.datetime.now(tz=datetime.timezone.utc)
     next_matches_day = active_day + datetime.timedelta(days=1)
-    time_of_next_matches = datetime.datetime(next_matches_day.year, next_matches_day.month, next_matches_day.day, tzinfo=datetime.timezone.utc) + switching_time 
-    print(time_of_next_matches)
-    print(current_utc_time)
+    time_of_next_matches = datetime.datetime(next_matches_day.year, next_matches_day.month, next_matches_day.day, tzinfo=datetime.timezone.utc) + switching_time
     seconds_until_matchmaking = (time_of_next_matches - current_utc_time).total_seconds()
     return seconds_until_matchmaking
 
@@ -96,28 +106,38 @@ def create_tomorrows_matches():
 
     latest_day = day_tomorrow
 
-def background_matching_function():
-        while True:
-                # Wait until a few minutes before new day to run matchmaking algorith
-                time_until_new_available = seconds_until_new_swipes()
-                print(f"Time until tomorrow's matches: {time_until_new_available/3600} hours")
-                print(f"Will start matchmaking in: {(time_until_new_available-MATCHMAKING_SECONDS_BEFORE_NEW_DAY)/3600} hours")
-                if time_until_new_available > MATCHMAKING_SECONDS_BEFORE_NEW_DAY:
-                    time.sleep((time_until_new_available - MATCHMAKING_SECONDS_BEFORE_NEW_DAY)) # Sleep until time to matchmake
+def background_matching_function(stop_condition_ref):
+    print("Started background function for matchmaking")
+    def is_stopped():
+        event = stop_condition_ref()
+        if event is None:
+            return True
+        return event.is_set()
+    
+    while True:
+        # Wait until a few minutes before new day to run matchmaking algorithm
+        time_until_new_available = seconds_until_new_swipes()
+        print(f"Time until tomorrow's matches: {time_until_new_available/3600} hours")
+        print(f"Will start matchmaking in: {(time_until_new_available-MATCHMAKING_SECONDS_BEFORE_NEW_DAY)/3600} hours")
+        while time_until_new_available > MATCHMAKING_SECONDS_BEFORE_NEW_DAY:
+            time.sleep(2) # Sleep until time to matchmake or stopped
+            if(is_stopped()):
+                return
 
-                _time_before = time.time()
-                create_tomorrows_matches()
-                print(f"Matchmaking process took {time.time() - _time_before} seconds")
+        _time_before = time.time()
+        create_tomorrows_matches()
+        print(f"Matchmaking process took {time.time() - _time_before} seconds")
 
-                time_until_new_available = seconds_until_new_swipes()
-                if(time_until_new_available > 0):
-                    time.sleep(time_until_new_available) # Sleep until time to serve new matches
+        time_until_new_available = seconds_until_new_swipes()
+        while time_until_new_available > 0:
+            time.sleep(2) # Sleep until time to serve new matches
+            if(is_stopped()):
+                return
 
-                step_matching_day()
+        step_matching_day()
 
 def trigger_start_matchmaking():
     with lock:
         global matchmaking_thread
         if matchmaking_thread is None:
-           matchmaking_thread = threading.Thread(target=background_matching_function, daemon=True)
-           matchmaking_thread.start()
+           matchmaking_thread = ThreadWrapper(background_matching_function)
