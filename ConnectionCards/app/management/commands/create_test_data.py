@@ -71,10 +71,8 @@ class Command(BaseCommand):
         test_user.full_clean()
         test_user.save()
 
-        today = datetime.datetime.now(
-            datetime.timezone.utc).date()
-        some_time_back = datetime.datetime.now(
-            datetime.timezone.utc).date() + datetime.timedelta(days=-2)
+        today = util_matching.active_day
+        some_time_back = today + datetime.timedelta(days=-2)
 
         for profile in already_matched_with:
             new_user = models.User.objects.create_user(

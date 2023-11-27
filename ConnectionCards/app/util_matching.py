@@ -9,9 +9,9 @@ import weakref
 
 MATCHMAKING_SECONDS_BEFORE_NEW_DAY = 5*60 # 5 minutes
 MAX_NR_MATCHES = 4
+SWITCHING_TIME = datetime.timedelta(hours=19, minutes=25) # This time (utc) into a day new swipes are made available!
 
-switching_time = datetime.timedelta(hours=18, minutes=15) # This time (utc) into a day the matchmaking process is run!
-active_day = (datetime.datetime.now(tz=datetime.timezone.utc) - switching_time).date() # "Day" of which current matchmaking is valid
+active_day = (datetime.datetime.now(tz=datetime.timezone.utc) - SWITCHING_TIME).date() # "Day" of which current matchmaking is valid
 latest_day = None # Matches are available for this day, might be higher than active_day for a short while
 print(f"Matching for {active_day} is valid now")
 
@@ -32,9 +32,9 @@ class ThreadWrapper:
 def seconds_until_new_swipes():
     current_utc_time = datetime.datetime.now(tz=datetime.timezone.utc)
     next_matches_day = active_day + datetime.timedelta(days=1)
-    time_of_next_matches = datetime.datetime(next_matches_day.year, next_matches_day.month, next_matches_day.day, tzinfo=datetime.timezone.utc) + switching_time
+    time_of_next_matches = datetime.datetime(next_matches_day.year, next_matches_day.month, next_matches_day.day, tzinfo=datetime.timezone.utc) + SWITCHING_TIME
     seconds_until_matchmaking = (time_of_next_matches - current_utc_time).total_seconds()
-    return seconds_until_matchmaking
+    return round(seconds_until_matchmaking)
 
 def match_factor(person):
     some_time_back = datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=90)
@@ -70,7 +70,7 @@ def matches_left(user, day):
 def match_people(people, day):
     people_by_nr_matches_last_year = sorted(people, key=match_factor)
     for person in people_by_nr_matches_last_year:
-        print(person.user.first_name)
+
         # Get nr of matches already of this day
         potential_partners = [p for p in people if people_compatible(person, p) and matches_left(p.user, day)]
         to_match_with = random.sample(potential_partners, min(matches_left(person.user, day), len(potential_partners)))
@@ -84,12 +84,17 @@ def step_matching_day():
     print(f"Matching for {active_day} is valid now")
 
 def create_tomorrows_matches():
-    should_be_current_active_day = (datetime.datetime.now(tz=datetime.timezone.utc) - switching_time).date()
+    should_be_current_active_day = (datetime.datetime.now(tz=datetime.timezone.utc) - SWITCHING_TIME).date()
     day_tomorrow = (should_be_current_active_day + datetime.timedelta(days=1))
     global latest_day, active_day
     if latest_day is None:
         _latest_day_in_db = models.HalfPairing.objects.aggregate(Max('matching_date'))['matching_date__max']
-        latest_day = max(active_day, _latest_day_in_db) # Day of last time matchmaking run
+        print(list(models.HalfPairing.objects.filter(matching_date=_latest_day_in_db)))
+        if _latest_day_in_db > active_day:
+            print(f"We have already matched for{_latest_day_in_db}")
+            latest_day = _latest_day_in_db # Day of last time matchmaking run
+        else:
+            latest_day = active_day
 
     if day_tomorrow == latest_day:
         return # If for some reason the matchmaking was invoked twice

@@ -15,7 +15,7 @@ function change_text(text) {
 function no_profiles(data)
 {
   seconds = data.seconds_to_next
-  if (seconds <= 60)
+  if (seconds <= 91)
   {
     change_text(`No new profiles available, check again in ${seconds} seconds`)
   }
