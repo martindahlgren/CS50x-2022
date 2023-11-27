@@ -3,7 +3,7 @@ if (Test-Path db.sqlite3) {
     Remove-Item db.sqlite3 -Force
 }
 python ./manage.py makemigrations &&
-python ./manage.py migrate && 
+python ./manage.py migrate --run-syncdb && 
 python ./manage.py test &&
 python ./manage.py create_test_data &&
 python ./manage.py runserver

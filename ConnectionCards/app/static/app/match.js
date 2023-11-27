@@ -14,14 +14,18 @@ function change_text(text) {
 
 function no_profiles(data)
 {
-  hours = data.hours_to_next
-  if (Math.round(hours) <= 1)
+  seconds = data.seconds_to_next
+  if (seconds <= 60)
   {
-    change_text(`No new profiles available, check again in ${Math.round(hours*60)} minutes`)
+    change_text(`No new profiles available, check again in ${seconds} seconds`)
+  }
+  else if (seconds <= 3600)
+  {
+    change_text(`No new profiles available, check again in ${Math.round(seconds/60)} minutes`)
   }
   else
   {
-    change_text(`No new profiles available, check again in ${Math.round(hours)} hours`)
+    change_text(`No new profiles available, check again in ${Math.round(seconds/3600)} hours`)
   }
 }
 

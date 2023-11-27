@@ -141,6 +141,8 @@ class _Cities():
                 displayname = f"{found_name} ({city.name})"
             if city.admin2:
                 displayname += f", {city.admin2}"
+            if city.admin1:
+                displayname += f", {city.admin1}"
             displayname += f", {city.country}"
             matches_list.append((displayname, city))
 
@@ -155,7 +157,7 @@ cities = _Cities()
 
 def get_n_swipes_left(user, day=None):
     if day is None:
-        day = util_matching.latest_day
+        day = util_matching.active_day
     swipes = HalfPairing.objects.filter(this_user=user, matching_date=day, user_likes_swipee=SwipeState.TO_SWIPE)
     swipes = list(swipes)
     n_already_swiped = len(list(HalfPairing.objects.filter(this_user=user, matching_date=day).exclude(user_likes_swipee=SwipeState.TO_SWIPE)))
@@ -170,10 +172,10 @@ def get_n_swipes_left(user, day=None):
 def get_daily_swipes(user, day=None):
     "Get swipes of the day, only the one where the user didn't swipe yet"
     if day is None:
-        day = util_matching.latest_day
+        day = util_matching.active_day
     swipes = HalfPairing.objects.filter(this_user=user, matching_date=day, user_likes_swipee=SwipeState.TO_SWIPE)
     swipes = list(swipes)
-    n_swipes_left = get_n_swipes_left(user, day)
+    n_swipes_left = get_n_swipes_left(user)
 
     return swipes, n_swipes_left
 

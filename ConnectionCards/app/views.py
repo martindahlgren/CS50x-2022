@@ -168,8 +168,12 @@ def get_candidates(request):
     if len(daily_swipes) > 4:
         return JsonResponse(status=400)
     return JsonResponse({"swipees": [util.serialize_swipe(hp) for hp in daily_swipes],
-                         "hours_to_next": util_matching.hours_until_new_swipes(),
+                         "seconds_to_next": util_matching.seconds_until_new_swipes(),
                          "n_swipes_left": n_swipes_left})
+
+def start_background_matching(request):
+    util_matching.trigger_start_matchmaking()
+    return JsonResponse({})
 
 @login_required
 @require_POST
@@ -180,7 +184,7 @@ def send_swipe(request):
     swipes_left = util.get_n_swipes_left(request.user)
     assert swipes_left != 0 # Limiting swiping is the point
     assert swipe.user_likes_swipee == models.SwipeState.TO_SWIPE # Don't allow selecting the same user
-    assert swipe.matching_date == util_matching.latest_day # Only allowed to swipe on the matches of today
+    assert swipe.matching_date == util_matching.active_day # Only allowed to swipe on the matches of today
     swipe.user_likes_swipee = models.SwipeState.YES
     swipe.save()
     match_already = (swipe.other_half.user_likes_swipee == models.SwipeState.YES)
