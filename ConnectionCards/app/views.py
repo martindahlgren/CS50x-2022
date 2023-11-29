@@ -135,20 +135,22 @@ def register(request):
     else:
         return render(request, "app/register.html")
 
-class UploadFileForm(forms.Form):
-    file = forms.ImageField()
+class UploadImageForm(forms.Form):
+    file = forms.ImageField() # TODO Check file size
 
 @login_required
 @require_POST
 def upload_picture(request):
     if request.method == "POST":
-        form = UploadFileForm(request.POST, request.FILES)
+        form = UploadImageForm(request.POST, request.FILES)
         if form.is_valid():
             profile = request.user.profile
             profile.picture = request.FILES['file']
             print(profile.picture.url)
             profile.save()
-    return HttpResponseRedirect(reverse("index"))
+        else:
+            print("Invalid image uploaded")
+    return HttpResponseRedirect(reverse("profile"))
 
 @login_required
 def get_chat(request):

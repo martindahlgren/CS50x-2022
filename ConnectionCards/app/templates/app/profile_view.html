@@ -1,61 +1,51 @@
 {% extends "app/layout.html" %}
 {% block body %}
 
-<h1>Edit Profile</h1>
-{% if message %}
+<h1>My Profile</h1>
 <div id="edit-profile-message">{{message}}</div>
-{% endif %}
 
+<div id="profile-forms-container">
 
-<!-- Forms that cannot be edited -->
-<div>
-<label for="name">Name:</label>
-<input type="text" id="name" disabled placeholder="{{name}}">
-<label for="gender">Gender:</label>
-<input type="text" id="gender" disabled placeholder="{{gender}}">
-</div>
-
-<img src="{{profile.picture.url}}" width=210px>
+<p>
+<img src="{{profile.picture.url}}" width=210px> <!-- Forms that cannot be edited -->
 <form action="{% url 'upload_picture' %}" method="post" enctype="multipart/form-data">
-  <label for="file">Profile Picture</label>
+  <label for="file">Choose Picture:</label>
   <input id="file" name="file" type="file" />
   {% csrf_token %}
   <button>Upload</button>
 </form>
+</p>
 
+<form>
+  <label for="name">Name:</label>
+  <input type="text" id="name" disabled placeholder="{{name}}">
+
+  <label for="gender">Gender:</label>
+  <input type="text" id="gender" disabled placeholder="{{gender}}">
+
+</form>
 
 <form id="edit-profile-form">
-  <p>
-    <label for="into_men">Interested in Men:</label>
-    <input type="checkbox" id="into_men" name="into_men" {% if profile.into_men %}checked{% endif %}>
-  </p>
-  <p>
-    <label for="into_women">Interested in Women:</label>
-    <input type="checkbox" id="into_women" name="into_women" {% if profile.into_women %}checked{% endif %}>
-  </p>
-  <p>
-    <label for="into_nb">Interested in Other:</label>
-    <input type="checkbox" id="into_nb" name="into_nb" {% if profile.into_nb %}checked{% endif %}>
-  </p>
-  <p>
+
+    <label for="into_men"><input type="checkbox" id="into_men" name="into_men" {% if profile.into_men %}checked{% endif %}>Interested in Men</label>
+    <label for="into_women"><input type="checkbox" id="into_women" name="into_women" {% if profile.into_women %}checked{% endif %}>Interested in Women</label>
+    <label for="into_nb"><input type="checkbox" id="into_nb" name="into_nb" {% if profile.into_nb %}checked{% endif %}>Interested in Other</label>
+    
+
+  <label for="bio">Bio</label>
   <textarea name="bio" cols="40" rows="10" required id="bio" maxlength="300">{{ profile.bio|escape }}</textarea>
-  </p>
-  <p>
-    <label for="city-filter">Filter City</label>
+
+    <label for="city-filter">Filter Cities</label>
     <input type="text" id="city-filter" name="city-filter">
-  </p>
+
   <div id="cities-radios">
-    <div>
-    <input type="radio" name="city" id="city_{{ profile.location }}" value="{{ profile.location }}" checked />
-    <label for="city_{{ profile.location }}">{{ location_str }}</label>
-    </div>
+    <label for="city_{{ profile.location }}"><input type="radio" name="city" id="city_{{ profile.location }}" value="{{ profile.location }}" checked />{{ location_str }}</label>
   </div>
-  
+
 
   <div id="edit-profile-btn-container"><button type="submit" >Save</button></div>
   </form>
-  <div id="message"></div>
-
+</div>
   <script src="/static/app/profile.js"></script>
 
 

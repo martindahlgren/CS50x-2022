@@ -30,9 +30,9 @@ function filter_cities(event) {
       }
       else {
         add_city_options([]);
-        document.querySelector('#message').innerText = "Error"
+        document.querySelector('#edit-profile-message').innerText = "Error"
       }
-    }).catch(() => { add_city_options([]); document.querySelector('#message').innerText = "Error" })
+    }).catch(() => { add_city_options([]); document.querySelector('#edit-profile-message').innerText = "Error" })
 }
 
 function add_city_options(cities)
@@ -41,19 +41,13 @@ function add_city_options(cities)
   innerHTML = ""
   for (const city of cities) {
     innerHTML += `
-      <div>
-      <input type="radio" name="city" value="${city["city_id"]}" id="city_${city["city_id"]}" />
-      <label for="city_${city["city_id"]}">${city["display_name"]}</label>
-      </div>
+      <label for="city_${city["city_id"]}"><input type="radio" name="city" value="${city["city_id"]}" id="city_${city["city_id"]}"/>${city["display_name"]}</label>
     `
   }
 
   if (cities.length == 0) {
     innerHTML = `
-    <div>
-    <input type="radio" name="city" value="" id="city_invalid" />
-    <label for="city_invalid">No matching cities</label>
-    </div>
+    <label for="city_invalid"><input type="radio" name="city" value="" id="city_invalid" />No matching cities</label>
   `
   }
   radios.innerHTML = innerHTML
@@ -62,6 +56,7 @@ function add_city_options(cities)
 
 function update_profile(event) {
   event.preventDefault()
+  document.querySelector('#edit-profile-message').innerText = ""
   const formFields = event.target.elements;
   fetch('/profileupdate', {
     method: 'POST',
@@ -77,10 +72,10 @@ function update_profile(event) {
   })
     .then(response => {
       if (response.status == 200) {
-        document.querySelector('#message').innerText = "Updated profile"
+        document.querySelector('#edit-profile-message').innerText = "Updated profile"
       }
       else {
-        document.querySelector('#message').innerText = "Error"
+        document.querySelector('#edit-profile-message').innerText = "Error"
       }
-    }).catch(() => { document.querySelector('#message').innerText = "Error" })
+    }).catch(() => { document.querySelector('#edit-profile-message').innerText = "Error" })
 }
