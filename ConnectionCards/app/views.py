@@ -12,6 +12,9 @@ from . import models
 from django.views.decorators.http import require_http_methods, require_POST, require_safe
 from django.db import transaction
 from django import forms
+from PIL import Image
+import io
+
 
 
 def index(request):
@@ -141,11 +144,31 @@ class UploadImageForm(forms.Form):
 @login_required
 @require_POST
 def upload_picture(request):
+    def get_new_dimensions(width, height):
+        if width >= height and width > 1024:
+            height = round(height * (1024/width))
+            width = 1024
+            return True, width, height
+        elif height >= width and height > 1024:
+            width = round(width * (1024/height))
+            height = 1024
+            return True, width, height
+        else:
+            return False, 0, 0
+
     if request.method == "POST":
         form = UploadImageForm(request.POST, request.FILES)
         if form.is_valid():
             profile = request.user.profile
-            profile.picture = request.FILES['file']
+            img = Image.open(request.FILES['file'])
+            if img.mode in ("RGBA", "P"): img = img.convert("RGB")
+            need_resize, new_width, new_height = get_new_dimensions(*img.size)
+            if need_resize:
+               img = img.resize((new_width,new_height), Image.LANCZOS)
+            buf = io.BytesIO()
+            img.save(buf, format='JPEG')
+            buf.seek(0)
+            profile.picture.save('converted_pic.jpg', buf)
             print(profile.picture.url)
             profile.save()
         else:
