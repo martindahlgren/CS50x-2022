@@ -10,7 +10,7 @@ MAX_SWIPES_PER_DAY = 2
 
 class _Cities():
 
-    " Helps filtering for cities. Data source: geonames.org "
+    "Helps finding cities. Data source: geonames.org cities5000.txt"
 
     @dataclass
     class City():
@@ -54,7 +54,7 @@ class _Cities():
                 (country, admin1, admin2) = concatenated_code.split(".")
                 admin2_areas.setdefault(country, {}).setdefault(admin1, {})[admin2] = name
 
-        FILEPATH=os.path.dirname(__file__) + '/cities500.txt'
+        FILEPATH=os.path.dirname(__file__) + '/cities5000.txt'
 
         all_names_list = []
         cities = []
@@ -66,6 +66,8 @@ class _Cities():
                 population, elevation, dem, timezone, modification_date) = line.split("\t")
                 geonameid = int(geonameid)
                 population = int(population)
+                if feature_code in ("PPLX", "PPLW", "STLMT", "PPLQ", "PPLH") :
+                    continue # Ignore section of populated place and some other "cities"
 
                 try:
                     admin1_str = admin1_areas[country_code][admin1_code]
