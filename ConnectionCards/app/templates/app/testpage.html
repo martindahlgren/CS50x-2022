@@ -45,39 +45,34 @@
         }
 
 
-        .message-divider {
+        .my-message-container, .their-message-container {
             display: flex;
             flex-direction: row;
             width: 100%;
         }
 
-        .left-message-side, .right-message-side {
-            display: flex;
-            justify-content: flex-end;
-            flex :1;
+        .my-message-container {
+            justify-content: left;
         }
 
-        .right-message-side {
-            justify-content: flex-end;
+        .their-message-container {
+            justify-content: right;
         }
 
-        .left-message-side {
-            justify-content: flex-start;
-        }
-
-        .message {
+        .my-message, .their-message {
             width: fit-content;
             height: fit-content;
             padding: 10px;
             margin: 8px;
             border-radius: 10px;
+            max-width: 75%;
         }
 
-        .left-message-side > .message {
+        .my-message {
             background-color: aquamarine;
         }
 
-        .right-message-side > .message {
+        .their-message {
             background-color: rgb(75, 158, 253);
         }
 
@@ -161,33 +156,28 @@
         </div>
 
         <div class="chat-conversation-area">
-            <div class="message-divider">
-                <div class="left-message-side">
-                    <div class=message>
-                        My message
-                    </div>
-                </div>
-                <div class="right-message-side">
-                </div>
+
+
+            <div class=my-message-container>
+            <div class=my-message>
+                My message
             </div>
-            <div class="message-divider">
-                <div class="left-message-side">
-                </div>
-                <div class="right-message-side">
-                    <div class=message>
-                        Their Message
-                    </div>
-                </div>
             </div>
-            <div class="message-divider">
-                <div class="left-message-side">
-                    <div class=message>
-                        My message, a very long one. When will it end? I wonder if it will span over multiple lines? :)
-                    </div>
-                </div>
-                <div class="right-message-side">
-                </div>
+            <div class=their-message-container>
+            <div class=their-message>
+                Their Message
             </div>
+            </div>
+            <div class=my-message-container>
+            <div class=my-message>
+                My message, a very long one. When will it end? I wonder if it will span over multiple lines? :)
+            </div>
+            </div>
+            <div class=their-message-container>
+                <div class=their-message>
+                    Their message, a very long one. When will it end? I wonder if it will span over multiple lines, especially if I make it even longer :)
+                </div>
+                </div>
         </div>
 
 
