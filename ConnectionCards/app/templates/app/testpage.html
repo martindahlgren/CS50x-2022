@@ -69,11 +69,12 @@
         }
 
         .my-message {
-            background-color: aquamarine;
+            background-color: rgb(75, 158, 253);
         }
 
         .their-message {
-            background-color: rgb(75, 158, 253);
+            background-color: rgb(127, 255, 249);
+
         }
 
 
@@ -109,6 +110,8 @@
             flex: 1;
             display: flex;
             flex-direction: column;
+            box-sizing: border-box;
+            overflow-y: scroll;
         }
 
     </style>
@@ -129,30 +132,30 @@
 
         <div class="chat-conversations">
             <h2>Conversations</h2>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(2).jpg">Emily</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(1).jpg">Serena  </div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(3).jpg">Jasper</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(4).jpg">Isabella</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(5).jpg">Oliver</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(6).jpg">Luna</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(7).jpg">Xavier</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(8).jpg">Ava</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(9).jpg">Leo</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(10).jpg">Evelyn</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(11).jpg">Felix</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(12).jpg">Mia</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(2).jpg">Emily</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(1).jpg">Serena  </div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(3).jpg">Jasper</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(4).jpg">Isabella</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(5).jpg">Oliver</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(6).jpg">Luna</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(7).jpg">Xavier</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(8).jpg">Ava</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(9).jpg">Leo</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(10).jpg">Evelyn</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(11).jpg">FelixMichaelCeraExtremelyLongName</div>
-            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="35px" src="media/images/test_faces/tpdne%20(12).jpg">Mia</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(2).jpg">Emily</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(1).jpg">Serena  </div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(3).jpg">Jasper</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(4).jpg">Isabella</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(5).jpg">Oliver</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(6).jpg">Luna</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(7).jpg">Xavier</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(8).jpg">Ava</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(9).jpg">Leo</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(10).jpg">Evelyn</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(11).jpg">Felix</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(12).jpg">Mia</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(2).jpg">Emily</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(1).jpg">Serena  </div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(3).jpg">Jasper</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(4).jpg">Isabella</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(5).jpg">Oliver</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(6).jpg">Luna</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(7).jpg">Xavier</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(8).jpg">Ava</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(9).jpg">Leo</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(10).jpg">Evelyn</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(11).jpg">FelixMichaelCeraExtremelyLongName</div>
+            <div class="chat-conversation-profile"><img class=chat-conv-profile-pic height="50px" src="media/images/test_faces/tpdne%20(12).jpg">Mia</div>
         </div>
 
         <div class="chat-conversation-area">
