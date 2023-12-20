@@ -44,6 +44,44 @@
             position: relative;
         }
 
+
+        .message-divider {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+        }
+
+        .left-message-side, .right-message-side {
+            display: flex;
+            justify-content: flex-end;
+            flex :1;
+        }
+
+        .right-message-side {
+            justify-content: flex-end;
+        }
+
+        .left-message-side {
+            justify-content: flex-start;
+        }
+
+        .message {
+            width: fit-content;
+            height: fit-content;
+            padding: 10px;
+            margin: 8px;
+            border-radius: 10px;
+        }
+
+        .left-message-side > .message {
+            background-color: aquamarine;
+        }
+
+        .right-message-side > .message {
+            background-color: rgb(75, 158, 253);
+        }
+
+
         .chat-conversation-profile {
             padding: 3px;
         }
@@ -74,6 +112,8 @@
         .chat-conversation-area {
             background-color: #e0e5ec;
             flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
     </style>
@@ -121,7 +161,33 @@
         </div>
 
         <div class="chat-conversation-area">
-            TODO: Messages
+            <div class="message-divider">
+                <div class="left-message-side">
+                    <div class=message>
+                        My message
+                    </div>
+                </div>
+                <div class="right-message-side">
+                </div>
+            </div>
+            <div class="message-divider">
+                <div class="left-message-side">
+                </div>
+                <div class="right-message-side">
+                    <div class=message>
+                        Their Message
+                    </div>
+                </div>
+            </div>
+            <div class="message-divider">
+                <div class="left-message-side">
+                    <div class=message>
+                        My message, a very long one. When will it end? I wonder if it will span over multiple lines? :)
+                    </div>
+                </div>
+                <div class="right-message-side">
+                </div>
+            </div>
         </div>
 
 
