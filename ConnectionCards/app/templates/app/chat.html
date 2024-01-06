@@ -122,7 +122,7 @@
         </div>
 
         <div class=message-writing>
-            <textarea class="new-message" name="text" oninput='this.style.minheight = "";this.style.height = Math.max(this.scrollHeight + 3) + "px"'></textarea><button>Send</button>
+            <textarea id="new-message" name="text" oninput="update_new_msg_height()"></textarea><button>Send</button>
         </div>
 
     </div>
@@ -130,8 +130,7 @@
 
 </div>
 
-
-
+<script src="/static/app/chat.js"></script>
 
 
 {% endblock %}
