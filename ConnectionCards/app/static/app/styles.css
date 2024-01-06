@@ -1,3 +1,10 @@
+html, body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
 .banner {
     background-color: #ff70ba; /* Choose your desired background color */
     padding: 10px;
@@ -7,11 +14,8 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
 }
 
 #profile-forms-container label {
@@ -49,11 +53,11 @@ body {
 }
 
 .app-container {
-    flex-grow: 1; /* Allow the content to grow and take up remaining space */
+    flex: 1 1 auto; /* Grow, shrink, basis */
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    align-items: center; /* Todo I don't like this  */
+    overflow: auto;
 }
 
 
@@ -122,4 +126,101 @@ z-index: -1;
 .profile-name 
 {
     white-space: nowrap; /* Prevent names from going over two lines */
+}
+
+
+
+.chat-page {
+    flex: 1 1 auto; /* Grow, shrink, basis */
+    display: flex;
+    align-items: stretch;
+    position: relative;
+    height: 100%;
+}
+
+
+.my-message-container, .their-message-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.my-message-container {
+    justify-content: left;
+}
+
+.their-message-container {
+    justify-content: right;
+}
+
+.my-message, .their-message {
+    width: fit-content;
+    height: fit-content;
+    padding: 10px;
+    margin: 8px;
+    border-radius: 10px;
+    max-width: 75%;
+}
+
+.my-message {
+    background-color: rgb(75, 158, 253);
+}
+
+button {
+    background-color: rgb(75, 158, 253);
+    color: yellow;
+}
+
+.their-message {
+    background-color: rgb(127, 255, 249);
+
+}
+
+
+.chat-conversation-profile {
+    padding: 3px;
+}
+.chat-conv-profile-pic {
+    padding-left: 1px;
+    padding-right: 6px;
+    box-sizing: content-box;
+}
+
+.chat-conversations {
+    min-width: 200px;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    white-space: nowrap;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    max-width: 342;
+}
+
+@media screen and (max-width: 800px) {
+.chat-conversations {
+    min-width: initial;
+    padding-right: 30px;
+    max-width: 130px;
+}
+}
+
+.chat-conversation-area {
+    background-color: #e0e5ec;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+#messages {
+    overflow-y: scroll;
+}
+
+.message-writing {
+    display: flex;
+}
+
+.new-message {
+    flex: 1;
 }
