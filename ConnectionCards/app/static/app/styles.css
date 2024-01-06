@@ -224,3 +224,16 @@ button {
 .new-message {
     flex: 1;
 }
+
+.chat-title-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.chat-title-row > h1 {
+    display: inline;
+}
+
+#block-button {
+ background-color: red;
+}
