@@ -198,3 +198,16 @@ def serialize_swipe(halfpairing):
         "picture": picture,
         "bio": bio,
     }
+    
+def get_conversations_json(user):
+    swipes_yes = HalfPairing.objects.filter(this_user=user, user_likes_swipee=SwipeState.YES)
+    matches = []
+    for swipe in swipes_yes:
+        if swipe.other_half.user_likes_swipee == SwipeState.YES:
+            matches.append(swipe)
+
+    # Order matches - first unread and then by matching date
+    matches = sorted(matches, key=lambda p: ( p.has_unread, p.matching_date ), reverse=True)
+
+
+    return [{"user_id": s.swipee.id, "name": s.swipee.first_name, "picture": s.swipee.profile.picture.url, "unread": s.has_unread} for s in matches]

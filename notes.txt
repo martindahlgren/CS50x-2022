@@ -8,10 +8,10 @@ Possible improvements:
 - Run matchmaking at a specific time in local timezone
 
 APIs:
-
+GetConversations() # Returns all conversations [{user_id, profile_pic, has_unread_messages}]
 GetChat(user_id) # Returns all messages in chat. Each message has an index
 SendChat(user_id, message) # Send a message to a match
 GetMoreChat(user_id, idx) # Returns next available message after the idx. After 10 seconds the server will close the connection if nothing comes in. The client can try again.
 
 DB Models:
-ChatMessage (content, Pair, sender, receiver, id)
+ChatMessage (content, Pair, sender, receiver, id, is_unread)

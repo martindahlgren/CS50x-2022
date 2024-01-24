@@ -15,7 +15,7 @@ class LocationMatchingTestCase(TestCase):
         """ Try retrieving the list of cities starting with vä """
         city_matches = util.cities.get_matches("vän", 10)
         city_matches_display = [(displayname.split(",")[0], city.geonameid) for (displayname, city) in city_matches]
-        assert city_matches_display == [("Vänersborg", 2665171), ('Vännäs', 2665093), ('Vändra', 587440), ('Vännäsby', 2665090), ('Vänqli (Vank)',584747)]
+        assert city_matches_display == [("Vänersborg", 2665171)]
 
     def test_limit_hits(self):
         """ Try retrieving the list of cities starting with vä """

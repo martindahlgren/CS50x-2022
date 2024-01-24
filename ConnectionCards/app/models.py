@@ -39,6 +39,7 @@ class HalfPairing(models.Model):
         choices=SwipeState.choices,
         default=SwipeState.TO_SWIPE,
     )
+    has_unread = models.BooleanField(default=True) # Has unread conversations or never opened 
     other_half = models.OneToOneField('self', on_delete=models.CASCADE, null=True)
     class Meta:
         unique_together = [["this_user", "swipee"]]

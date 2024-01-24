@@ -19,6 +19,7 @@ urlpatterns = [
     path("suggest_cities", views.suggest_cities),
     path("get_candidates", views.get_candidates),
     path("send_swipe", views.send_swipe),
+    path("get_conversations", views.get_conversations),
     path("start_background_matching", views.start_background_matching),
     path("test", TemplateView.as_view(template_name="app/testpage.html")),
 ]

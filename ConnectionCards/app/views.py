@@ -196,6 +196,12 @@ def get_candidates(request):
                          "seconds_to_next": util_matching.seconds_until_new_swipes(),
                          "n_swipes_left": n_swipes_left})
 
+@login_required
+def get_conversations(request):
+    conversations = util.get_conversations_json(request.user)
+    return JsonResponse({"conversations": conversations})
+
+
 def start_background_matching(request):
     util_matching.trigger_start_matchmaking()
     return JsonResponse({})

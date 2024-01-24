@@ -10,30 +10,30 @@ assert settings.DEBUG
 already_matched_with = [
     {"name": "Alex", "gender": "M", "into_men": True, "into_women": False, "into_nb": False,
      "bio": "I love hiking and exploring new places. Looking for someone to share adventures with.",
-     "location": 5128581},
+     "location": 5128581, "picture":"images/test_faces/tpdne (2).jpg"},
     {"name": "Jordan", "gender": "O", "into_men": True, "into_women": True, "into_nb": True,
      "bio":
      "Nature enthusiast, cat lover, and video game addict. Open to meeting people from all walks of life.",
-     "location": 5128581},
+     "location": 5128581, "picture":"images/test_faces/tpdne (1).jpg"},
     {"name": "Ethan", "gender": "M", "into_men": True, "into_women": False, "into_nb": False,
      "bio": "Tech geek by day, rock climber by weekend. Looking for a partner in both code and adventure.",
-     "location": 5128581},
+     "location": 5128581, "picture":"images/test_faces/tpdne (3).jpg"},
     {"name": "Olivia", "gender": "W", "into_men": False, "into_women": True, "into_nb": False,
      "bio":
      "Bookworm and coffee lover. Hoping to find someone who enjoys deep conversations and caffeine as much as I do.",
-     "location": 5128581},
+     "location": 5128581, "picture":"images/test_faces/tpdne (4).jpg"},
     {"name": "Liam", "gender": "M", "into_men": True, "into_women": False, "into_nb": False,
      "bio":
      "Foodie on a mission to try every restaurant in town. Looking for a fellow food adventurer to join me on the journey.",
-     "location": 5128581},
+     "location": 5128581, "picture":"images/test_faces/tpdne (5).jpg"},
     {"name": "Avery", "gender": "O", "into_men": True, "into_women": True, "into_nb": True,
      "bio":
      "Travel addict exploring the world one city at a time. Looking to connect with fellow wanderlusters.",
-     "location": 5128581},
+     "location": 5128581, "picture":"images/test_faces/tpdne (6).jpg"},
     {"name": "Noah", "gender": "M", "into_men": True, "into_women": False, "into_nb": False,
      "bio":
      "Musician and music producer. Hoping to find someone who appreciates the beauty of melodies and harmonies.",
-     "location": 5128581},]
+     "location": 5128581, "picture":"images/test_faces/tpdne (7).jpg"},]
 
 current_swipes = [
     {"name": "Emily", "gender": "W", "into_men": True, "into_women": True, "into_nb": False,
@@ -88,6 +88,7 @@ class Command(BaseCommand):
                 into_nb=profile["into_nb"],
                 bio=profile["bio"],
                 location=profile["location"],
+                picture=profile["picture"],
             )
 
             new_profile.save()
