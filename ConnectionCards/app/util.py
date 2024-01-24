@@ -4,7 +4,7 @@ import os
 from functools import lru_cache
 import bisect
 from . import util_matching
-from .models import HalfPairing, SwipeState
+from .models import HalfPairing, SwipeState, ChatMessage
 
 MAX_SWIPES_PER_DAY = 2
 
@@ -211,3 +211,22 @@ def get_conversations_json(user):
 
 
     return [{"user_id": s.swipee.id, "name": s.swipee.first_name, "picture": s.swipee.profile.picture.url, "unread": s.has_unread} for s in matches]
+    
+def users_matched(u1, u2):
+    pair1 = HalfPairing.objects.get(this_user=u1, swipee=u2)
+    pair2 = HalfPairing.objects.get(this_user=u2, swipee=u1)
+    u1_likes2 = pair1.user_likes_swipee == SwipeState.YES
+    u2_likes1 = pair2.user_likes_swipee == SwipeState.YES
+    return u2_likes1 and u1_likes2
+
+def get_conversation_json(u1, u2):
+    messages = []
+    sent = ChatMessage.objects.filter(sender=u1, receiver=u2)
+    for message in sent:
+        messages.append({"message": message.message, "sent_by_me": True, "id":message.id})
+    received = ChatMessage.objects.filter(sender=u2, receiver=u1)
+    for message in received:
+        messages.append({"message": message.message, "sent_by_me": False, "id":message.id})
+    messages.sort(key=lambda m: m["id"])
+    return messages
+    

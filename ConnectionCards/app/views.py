@@ -197,6 +197,12 @@ def get_candidates(request):
                          "n_swipes_left": n_swipes_left})
 
 @login_required
+def get_conversation(request, user_id):
+    assert util.users_matched(request.user, user_id)
+    messages = util.get_conversation_json(request.user, user_id)
+    return JsonResponse({"messages": messages})
+
+@login_required
 def get_conversations(request):
     conversations = util.get_conversations_json(request.user)
     return JsonResponse({"conversations": conversations})

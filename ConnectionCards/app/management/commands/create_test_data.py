@@ -101,6 +101,9 @@ class Command(BaseCommand):
             half_a.save()
             half_b.save()
 
+            for (message, from_adam) in [(f"Hello {profile['name']}!", True), ("Hello :)", False), ("Wyd?", True)]:
+                models.ChatMessage(sender=test_user if from_adam else new_user, receiver=new_user if from_adam else test_user, message=message).save()
+
         for profile in current_swipes:
             new_user = models.User.objects.create_user(
                 username=f"{profile['name'].lower()}@example.com",

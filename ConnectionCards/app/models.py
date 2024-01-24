@@ -57,4 +57,7 @@ def add_pair(user_a, user_b, date):
     return (pair_a, pair_b)
 
 class ChatMessage(models.Model):
-    pass
+    id = models.BigAutoField(primary_key=True)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sent_messages")
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="received_messages")
+    message = models.TextField()

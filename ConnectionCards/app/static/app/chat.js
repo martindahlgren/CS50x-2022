@@ -5,7 +5,25 @@ window.addEventListener('load', function () {
   update_new_msg_height();
 })
 
+function load_conversation(name, id)
+{
+  document.querySelector('#current_conv_name').innerText = name;
 
+  fetch(`/get_conversation/${id}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+        console.log(data)
+      }
+    ).catch(error => {
+      console.error('Error fetching data:', error);
+    });
+
+}
 
 
 function fill_conversations(data)
@@ -26,7 +44,7 @@ function fill_conversations(data)
     newDiv.appendChild(newImg)
     newDiv.appendChild(document.createTextNode(conversation.name))
 
-    newDiv.onclick = () => {newDiv.classList.remove("chat-conversation-profile-unread")}
+    newDiv.onclick = () => {newDiv.classList.remove("chat-conversation-profile-unread"); load_conversation(conversation.name, conversation.user_id)}
 
     conversations_div.appendChild(newDiv)
   }
