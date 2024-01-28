@@ -211,6 +211,11 @@ def get_conversations_json(user):
 
 
     return [{"user_id": s.swipee.id, "name": s.swipee.first_name, "picture": s.swipee.profile.picture.url, "unread": s.has_unread} for s in matches]
+
+def mark_conv_read(this_user, they_user):
+    pair = HalfPairing.objects.get(this_user=this_user, swipee=they_user)
+    pair.has_unread = False
+    pair.save()
     
 def users_matched(u1, u2):
     pair1 = HalfPairing.objects.get(this_user=u1, swipee=u2)
@@ -228,5 +233,9 @@ def get_conversation_json(u1, u2):
     for message in received:
         messages.append({"message": message.message, "sent_by_me": False, "id":message.id})
     messages.sort(key=lambda m: m["id"])
+
+    # Mark conversation as read
+    mark_conv_read(u1, u2)
+
     return messages
     

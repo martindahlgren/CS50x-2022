@@ -21,6 +21,7 @@ urlpatterns = [
     path("send_swipe", views.send_swipe),
     path("get_conversations", views.get_conversations),
     path("get_conversation/<int:user_id>", views.get_conversation),
+    path("send_chat", views.send_chat),
     path("start_background_matching", views.start_background_matching),
     path("test", TemplateView.as_view(template_name="app/testpage.html")),
 ]

@@ -3,6 +3,9 @@ window.addEventListener('load', function () {
   load_conversations();
   scroll_to_chat_end();
   update_new_msg_height();
+  document.querySelector('#messages').dataset.current_conv_user_id = undefined;
+  document.getElementById("send-button").disabled = true
+  document.getElementById("send-button").onclick = send_message
 })
 
 function append_to_conversation(messages)
@@ -34,10 +37,33 @@ function append_to_conversation(messages)
   }
 }
 
+function send_message()
+{
+  content = document.getElementById("new-message").value
+  document.getElementById("new-message").value = ""
+  recipient = document.querySelector('#messages').dataset.current_conv_user_id;
+  if (recipient == undefined)
+  {
+    return;
+  }
+
+  fetch("/send_chat", {
+    method: 'POST',
+    headers: { 'X-CSRFToken': csrftoken },
+    credentials: 'same-origin', // Do not send CSRF token to another domain.
+    body: JSON.stringify({
+        recipient: recipient,
+        message: content
+    })
+  })
+}
+
 function load_conversation(name, id)
 {
   document.querySelector('#current_conv_name').innerText = name;
-  document.querySelector('#block-button').dataset.to_block_id = id;
+  document.querySelector('#messages').dataset.current_conv_user_id = id;
+  document.getElementById("send-button").disabled = false
+
 
   document.querySelector('#messages').innerHTML = "";
 

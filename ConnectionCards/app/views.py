@@ -176,12 +176,14 @@ def upload_picture(request):
     return HttpResponseRedirect(reverse("profile"))
 
 @login_required
-def get_chat(request):
-    pass
-
-@login_required
 def send_chat(request):
-    pass
+    data = json.loads(request.body) # {"receiver, message"}
+    if not util.users_matched(request.user, data["recipient"]):
+        return HttpResponseServerError("Invalid receiver")
+    receiver_obj = models.User.objects.get(id=int(data["recipient"]))
+    models.ChatMessage.objects.create(sender=request.user, receiver=receiver_obj, message=data["message"])
+    return JsonResponse({"message": "Success"})
+
 
 @login_required
 def get_more_messages(request):
