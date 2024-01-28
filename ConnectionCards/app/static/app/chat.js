@@ -5,9 +5,41 @@ window.addEventListener('load', function () {
   update_new_msg_height();
 })
 
+function append_to_conversation(messages)
+{
+  messages_div = document.querySelector('#messages')
+
+  for (const message of messages)
+  {
+    const container_div = document.createElement("div");
+    const message_div = document.createElement("div");
+    message_div.innerText = message.message;
+
+    if (message.sent_by_me)
+    {
+      container_div.classList.add("my-message-container");
+      message_div.classList.add("my-message");
+    }
+    else
+    {
+      container_div.classList.add("their-message-container");
+      message_div.classList.add("their-message");
+    }
+    container_div.appendChild(message_div);
+    messages_div.appendChild(container_div);
+  }
+  if (messages.length != 0)
+  {
+    scroll_to_chat_end();
+  }
+}
+
 function load_conversation(name, id)
 {
   document.querySelector('#current_conv_name').innerText = name;
+  document.querySelector('#block-button').dataset.to_block_id = id;
+
+  document.querySelector('#messages').innerHTML = "";
 
   fetch(`/get_conversation/${id}`)
     .then(response => {
@@ -17,7 +49,7 @@ function load_conversation(name, id)
       return response.json();
     })
     .then(data => {
-        console.log(data)
+        append_to_conversation(data.messages)
       }
     ).catch(error => {
       console.error('Error fetching data:', error);
