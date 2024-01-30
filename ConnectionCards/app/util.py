@@ -225,12 +225,14 @@ def users_matched(u1, u2):
     u2_likes1 = pair2.user_likes_swipee == SwipeState.YES
     return u2_likes1 and u1_likes2
 
-def get_conversation_json(u1, u2):
+def get_conversation_json(u1, u2, later_than_mess_id=None):
+    if later_than_mess_id is None:
+         later_than_mess_id = 0
     messages = []
-    sent = ChatMessage.objects.filter(sender=u1, receiver=u2)
+    sent = ChatMessage.objects.filter(sender=u1, receiver=u2, id__gt=later_than_mess_id)
     for message in sent:
         messages.append({"message": message.message, "sent_by_me": True, "id":message.id})
-    received = ChatMessage.objects.filter(sender=u2, receiver=u1)
+    received = ChatMessage.objects.filter(sender=u2, receiver=u1, id__gt=later_than_mess_id)
     for message in received:
         messages.append({"message": message.message, "sent_by_me": False, "id":message.id})
     messages.sort(key=lambda m: m["id"])
@@ -247,5 +249,5 @@ def send_message(from_user, to_user, message):
     pair_recipient_half = HalfPairing.objects.get(this_user=to_user, swipee=from_user)
     pair_recipient_half.has_unread = True
     pair_recipient_half.save()
-    ChatMessage.objects.create(sender=request.user, receiver=receiver_obj, message=message)
+    ChatMessage.objects.create(sender=from_user, receiver=receiver_obj, message=message)
     return

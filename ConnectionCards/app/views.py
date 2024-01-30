@@ -14,19 +14,21 @@ from django.db import transaction
 from django import forms
 from PIL import Image
 import io
+from collections import defaultdict 
+import threading
 
 
 
 def index(request):
         """index view"""
-        return HttpResponseRedirect(reverse("match"))        
+        return HttpResponseRedirect(reverse("match"))
 
 def match_view(request):
     """match view"""
     if request.user.is_authenticated:
         return render(request, "app/match.html")
     else:
-        return HttpResponseRedirect(reverse("login"))        
+        return HttpResponseRedirect(reverse("login"))
 
 @login_required
 def profile_view(request):
@@ -175,18 +177,40 @@ def upload_picture(request):
             print("Invalid image uploaded")
     return HttpResponseRedirect(reverse("profile"))
 
+_waiting_for_messages = defaultdict(list) 
+def notify_message(sender, receiver):
+    conv_key = tuple(sorted([sender,receiver]))
+    for observer_event in _waiting_for_messages[conv_key]:
+        observer_event.set()
+
+def wait_for_message(user1, user2, timeout):
+    conv_key = tuple(sorted([user1,user2]))
+    event = threading.Event()
+    _waiting_for_messages[conv_key].append(event)
+    event.wait(timeout) # Wait for the notify_message to be called
+    _waiting_for_messages[conv_key].remove(event)
+    if not _waiting_for_messages[conv_key]:
+        del _waiting_for_messages[conv_key]
+
 @login_required
 def send_chat(request):
     data = json.loads(request.body) # {"recipient, message"}
     to_user = int(data["recipient"])
     util.send_message(request.user, to_user, data["message"])
-
+    notify_message(request.user.id, to_user)
     return JsonResponse({"message": "Success"})
 
 
 @login_required
-def get_more_messages(request):
-    pass
+def get_conversation(request, user_id, later_than_mess_id=None):
+
+    assert util.users_matched(request.user, user_id)
+    messages = util.get_conversation_json(request.user, user_id, (later_than_mess_id or 0))
+    if not messages and later_than_mess_id is not None:
+        #print("No messages availale, waiting 10 seconds for new ones")
+        wait_for_message(request.user.id, user_id, timeout=10)
+        messages = util.get_conversation_json(request.user, user_id, (later_than_mess_id or 0))
+    return JsonResponse({"messages": messages, "conversation_partner": user_id})
 
 @login_required
 def get_candidates(request):
@@ -196,12 +220,6 @@ def get_candidates(request):
     return JsonResponse({"swipees": [util.serialize_swipe(hp) for hp in daily_swipes],
                          "seconds_to_next": util_matching.seconds_until_new_swipes(),
                          "n_swipes_left": n_swipes_left})
-
-@login_required
-def get_conversation(request, user_id):
-    assert util.users_matched(request.user, user_id)
-    messages = util.get_conversation_json(request.user, user_id)
-    return JsonResponse({"messages": messages})
 
 @login_required
 def get_conversations(request):

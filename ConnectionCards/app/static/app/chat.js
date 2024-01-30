@@ -8,6 +8,10 @@ window.addEventListener('load', function () {
   document.getElementById("send-button").onclick = send_message
 })
 
+var current_conversation_id = undefined
+var current_conversation_latest_message = undefined
+var chat_request = undefined
+
 function append_to_conversation(messages)
 {
   messages_div = document.querySelector('#messages')
@@ -30,6 +34,8 @@ function append_to_conversation(messages)
     }
     container_div.appendChild(message_div);
     messages_div.appendChild(container_div);
+    current_conversation_latest_message = message.id;
+
   }
   if (messages.length != 0)
   {
@@ -41,7 +47,7 @@ function send_message()
 {
   content = document.getElementById("new-message").value
   document.getElementById("new-message").value = ""
-  recipient = document.querySelector('#messages').dataset.current_conv_user_id;
+  recipient = current_conversation_id;
   if (recipient == undefined)
   {
     return;
@@ -61,26 +67,12 @@ function send_message()
 function load_conversation(name, id)
 {
   document.querySelector('#current_conv_name').innerText = name;
-  document.querySelector('#messages').dataset.current_conv_user_id = id;
-  document.getElementById("send-button").disabled = false
-
-
+  current_conversation_id = id;
+  current_conversation_latest_message = 0;
   document.querySelector('#messages').innerHTML = "";
 
-  fetch(`/get_conversation/${id}`)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-        append_to_conversation(data.messages)
-      }
-    ).catch(error => {
-      console.error('Error fetching data:', error);
-    });
-
+  wait_for_new_messages();
+  document.getElementById("send-button").disabled = false
 }
 
 
@@ -145,4 +137,33 @@ function update_new_msg_height()
   newmessage.style.minheight = "";
   newmessage.style.height=0;
   newmessage.style.height = Math.max(newmessage.scrollHeight + 3) + "px"
+}
+
+function wait_for_new_messages()
+{
+  // Make a long going request. When receiving messages, check that they match current conversation!
+  // If you received something make a new request
+  // Request new messages, when received check user_id, if same and
+  if (chat_request)
+    request.abort()
+    chat_request = undefined
+
+  request = fetch(`/get_conversation/${current_conversation_id}/${current_conversation_latest_message}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+        if(data["conversation_partner"] == current_conversation_id)
+        {
+          append_to_conversation(data.messages)
+          wait_for_new_messages()
+        } // Else hopefully a new request has already been made :)
+      }
+    ).catch(error => {
+      console.error('Error fetching new messages for: ', current_conversation_id, error);
+    });
+
 }
