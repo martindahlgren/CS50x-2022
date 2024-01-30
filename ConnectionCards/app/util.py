@@ -4,7 +4,8 @@ import os
 from functools import lru_cache
 import bisect
 from . import util_matching
-from .models import HalfPairing, SwipeState, ChatMessage
+from .models import HalfPairing, SwipeState, ChatMessage, User
+from django.http import HttpResponseServerError
 
 MAX_SWIPES_PER_DAY = 2
 
@@ -216,7 +217,7 @@ def mark_conv_read(this_user, they_user):
     pair = HalfPairing.objects.get(this_user=this_user, swipee=they_user)
     pair.has_unread = False
     pair.save()
-    
+
 def users_matched(u1, u2):
     pair1 = HalfPairing.objects.get(this_user=u1, swipee=u2)
     pair2 = HalfPairing.objects.get(this_user=u2, swipee=u1)
@@ -238,4 +239,13 @@ def get_conversation_json(u1, u2):
     mark_conv_read(u1, u2)
 
     return messages
-    
+
+def send_message(from_user, to_user, message):
+    receiver_obj = User.objects.get(id=to_user)
+    if not users_matched(from_user, to_user):
+        return HttpResponseServerError("Invalid receiver")
+    pair_recipient_half = HalfPairing.objects.get(this_user=to_user, swipee=from_user)
+    pair_recipient_half.has_unread = True
+    pair_recipient_half.save()
+    ChatMessage.objects.create(sender=request.user, receiver=receiver_obj, message=message)
+    return
