@@ -6,6 +6,13 @@ window.addEventListener('load', function () {
   document.querySelector('#messages').dataset.current_conv_user_id = undefined;
   document.getElementById("send-button").disabled = true
   document.getElementById("send-button").onclick = send_message
+  document.getElementById("new-message").addEventListener('keydown', function(event) {
+      // Check if Enter key was pressed without Shift key
+      if (event.key === 'Enter' && !event.shiftKey) {
+        send_message();
+        event.preventDefault();
+      }
+  })
 })
 
 var current_conversation_id = undefined
