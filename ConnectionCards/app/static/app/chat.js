@@ -13,6 +13,8 @@ window.addEventListener('load', function () {
         event.preventDefault();
       }
   })
+  document.getElementById("block-button").onclick = block
+
 })
 
 var current_conversation_id = undefined
@@ -159,7 +161,7 @@ function wait_for_new_messages()
   // If you received something make a new request
   // Request new messages, when received check user_id, if same and
   if (chat_request)
-    request.abort()
+    chat_request.abort()
     chat_request = undefined
 
   request = fetch(`/get_conversation/${current_conversation_id}/${current_conversation_latest_message}`)
@@ -179,5 +181,36 @@ function wait_for_new_messages()
     ).catch(error => {
       console.error('Error fetching new messages for: ', current_conversation_id, error);
     });
+
+}
+
+
+
+function block()
+{
+  if (current_conversation_id == undefined)
+  {
+    return;
+  }
+  if (!window.confirm(`Are you sure you want to unmatch with ${document.querySelector('#current_conv_name').innerText}`))
+  {
+    return;
+  }
+
+
+  if (chat_request)
+    chat_request.abort()
+    chat_request = undefined
+
+  fetch("/unmatch", {
+    method: 'POST',
+    headers: { 'X-CSRFToken': csrftoken },
+    credentials: 'same-origin', // Do not send CSRF token to another domain.
+    body: JSON.stringify({
+      umatch_user_id: current_conversation_id,
+    })
+  })
+
+  location.reload();
 
 }
