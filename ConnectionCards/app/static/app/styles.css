@@ -197,7 +197,7 @@ button {
 
 
 .chat-conv-profile-pic {
-    width: 50px;
+    max-width: 50px;
     max-height: 50px;
     padding-left: 1px;
     padding-right: 6px;

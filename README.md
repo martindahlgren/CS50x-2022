@@ -1,25 +1,27 @@
 # Project Overview
 
-ConnectionCards is a dating website designed to make you find meaningful connections and motivate you to start conversations. It is similar to e.g. Tinder with the distinction that you will not waste hours swiping through profiles.
+ConnectionCards is a dating website designed to make you find meaningful connections. It is similar to e.g. Tinder with the distinction that you will not waste hours swiping through profiles since you are limted to two (2) likes per day.
 
-Instead, each day you are presented with a maximum of four profiles, out of which you can attempt to match with two of them. This forces you to be thoughtful with your matches, and encourages building genuine connection.
+This forces you to be thoughtful with your matches, and encourages building genuine connection. Every day at the same time you will have new potential profiles waiting for you.
 
-Otherwise the site offers all functionality that one can expect including
+The site offers all functionality that one can expect including
 - Profile pictures
 - Gender preferences
-- Matches are found in your selected city
+- Matches limited to your selected city
 - A responsive chat
 - Ability to unmatch with matches
 - Mobile responsiveness
 
 # Distinctiveness and Complexity
 
-This project took considerably more time to develop than previous projects (~6 months) and is different from these, including techniques not used in these.
+
+This project used Django with 4 database models as backend, and used Vanilla Javascript in frontend.
+
+It took considerably more time to develop than previous projects and is different from these, including techniques not used in these.
 
 It has multiple complex parts including
-- 4 database models
 - Possibility to upload images which are automatically re-scaled before being saved on server
-- A self-developed complex filtering algorithm to ease select the city from 5000 alternatives
+- A self-developed complex but fast filtering algorithm to help you select your city
 - A beautiful frontend with CSS based animations
 - A chat using long-running http requests instead of polling to get new messages
 - A long-running background task to run matchmaking process daily
@@ -27,7 +29,18 @@ It has multiple complex parts including
 
 # How to run application
 Install Pillow (see requirements.txt)
-In ConnectionCards python ./manage.py runserver
+
+python ./manage.py makemigrations &&
+python ./manage.py migrate --run-syncdb &&
+\# optional: python ./manage.py create_test_data &&
+python ./manage.py runserver
+
+Now the server is running.
+
+Start background thread for matchmaking by enter the root /start_background_matching, e.g. http://127.0.0.1:8000/start_background_matching
+The task will run daily at the time (UTC) specified in SWITCHING_TIME of util_matching.py
+
+Start using the website! To see an example created by created_test_data log in with User: adam@example.com  PW: test
 
 # Files of the project
 

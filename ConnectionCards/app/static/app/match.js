@@ -59,11 +59,11 @@ function on_click_card(card_html)
     }
     else if(data.n_swipes_left != 0 )
     {
-      change_text("Check Messages later to find out if you got a match");
+      change_text("Check Chat later to find out if you got a match");
     }
     else
     {
-      change_text("You have no clicks left. Come by Messages later!");
+      change_text("You have no clicks left. Come by Chat later!");
     }
     if (data.n_swipes_left == 0)
     {

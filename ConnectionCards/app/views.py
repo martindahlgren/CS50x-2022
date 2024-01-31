@@ -229,7 +229,7 @@ def get_conversations(request):
 
 def start_background_matching(request):
     util_matching.trigger_start_matchmaking()
-    return JsonResponse({})
+    return JsonResponse({"message": "Matchmaking will run in background"})
 
 @login_required
 @require_POST
