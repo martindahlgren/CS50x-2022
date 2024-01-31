@@ -9,7 +9,7 @@ import weakref
 
 MATCHMAKING_SECONDS_BEFORE_NEW_DAY = 5*60 # 5 minutes
 MAX_NR_MATCHES = 4
-SWITCHING_TIME = datetime.timedelta(hours=19, minutes=25) # This time (utc) into a day new swipes are made available!
+SWITCHING_TIME = datetime.timedelta(hours=21, minutes=47) # This time (utc) into a day new swipes are made available!
 
 active_day = (datetime.datetime.now(tz=datetime.timezone.utc) - SWITCHING_TIME).date() # "Day" of which current matchmaking is valid
 latest_day = None # Matches are available for this day, might be higher than active_day for a short while
@@ -133,8 +133,7 @@ def background_matching_function(stop_condition_ref):
         create_tomorrows_matches()
         print(f"Matchmaking process took {time.time() - _time_before} seconds")
 
-        time_until_new_available = seconds_until_new_swipes()
-        while time_until_new_available > 0:
+        while  seconds_until_new_swipes() > 0:
             time.sleep(2) # Sleep until time to serve new matches
             if(is_stopped()):
                 return
