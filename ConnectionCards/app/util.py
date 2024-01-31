@@ -1,7 +1,6 @@
 
 from dataclasses import dataclass
 import os
-from functools import lru_cache
 import bisect
 from . import util_matching
 from .models import HalfPairing, SwipeState, ChatMessage, User
