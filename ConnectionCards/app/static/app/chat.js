@@ -52,10 +52,17 @@ function append_to_conversation(messages)
 
 function send_message()
 {
-  content = document.getElementById("new-message").value
-  document.getElementById("new-message").value = ""
+
   recipient = current_conversation_id;
   if (recipient == undefined)
+  {
+    return;
+  }
+  content = document.getElementById("new-message").value
+  document.getElementById("new-message").value = ""
+  update_new_msg_height();
+
+  if (content == "")
   {
     return;
   }
