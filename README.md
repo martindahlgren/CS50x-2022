@@ -1,5 +1,7 @@
 # Project Overview
 
+Project of course CS50x https://web.archive.org/web/2/https://cs50.harvard.edu/web/2020/projects/final/capstone/
+
 ConnectionCards is a dating website designed to make you find meaningful connections. It is similar to e.g. Tinder with the distinction that you will not waste hours swiping through profiles since you are limted to two (2) likes per day.
 
 This forces you to be thoughtful with your matches, and encourages building genuine connection. Every day at the same time you will have new potential profiles waiting for you.
