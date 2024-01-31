@@ -17,7 +17,7 @@ The site offers all functionality that one can expect including
 
 This project used Django with 4 database models as backend, and used Vanilla Javascript in frontend.
 
-It took considerably more time to develop than previous projects and is different from these, including techniques not used in these.
+It took considerably more time to develop than previous projects and is different from these, including techniques not used in previous projects.
 
 It has multiple complex parts including
 - Possibility to upload images which are automatically re-scaled before being saved on server
@@ -31,8 +31,12 @@ It has multiple complex parts including
 Install Pillow (see requirements.txt)
 
 python ./manage.py makemigrations &&
-python ./manage.py migrate --run-syncdb &&
-\# optional: python ./manage.py create_test_data &&
+python ./manage.py migrate --run-syncdb
+
+
+optional:
+python ./manage.py create_test_data
+
 python ./manage.py runserver
 
 Now the server is running.
@@ -80,9 +84,6 @@ All HTML pages are rendered using Django, and inherits from layout.html or login
 - match.html - Main page where the user can match with others
 - profile_view.html - Page to edit user's profile
 - register.html - Registering page
-
-## ConnectionCards/app/static/app/images/logo.png
-Logo of application (made using some AI tool)
 
 ## ConnectionCards/app/static/app/images/logo.png
 Logo of application (made using some AI tool)
