@@ -59,7 +59,7 @@ def profile_update(request):
     profile.into_women = data["into_women"]
     profile.into_nb = data["into_nb"]
     profile.bio = data["bio"]
-    location = int(data["location"]) or None
+    location = int(data["location"]) if data["location"] else None
     if not location or location not in cities.id_to_city:
         return JsonResponse(status=400)
     profile.location = location
@@ -259,7 +259,6 @@ def unmatch_user(request):
 
 def suggest_cities(request):
     # request format {"vänersbo"} => {possible_cities: [{display_name: 'Vänersborg, Vänersborgs Kommun, SE', city_id:2665171}]}
-    data = json.loads(request.body)
-    matches = cities.get_matches(data["filter"], 10)
+    matches = cities.get_matches(request.GET.get('q', ''), 10)
     response = {"possible_cities":[ {"display_name": m[0], "city_id": m[1].geonameid} for m in matches]}
     return JsonResponse(response)

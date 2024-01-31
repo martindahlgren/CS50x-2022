@@ -16,13 +16,10 @@ document.addEventListener('DOMContentLoaded', function () {
 function filter_cities(event) {
   filter = city_filter.value
 
-  fetch('/suggest_cities', {
-    method: 'POST', // TODO: Switch to using GET
+  fetch('/suggest_cities?' + new URLSearchParams({q: filter}), {
+    method: 'GET',
     headers: { 'X-CSRFToken': csrftoken },
     credentials: 'same-origin', // Do not send CSRF token to another domain.  
-    body: JSON.stringify({
-      filter: filter,
-    })
   })
     .then(response => {
       if (response.status == 200) {

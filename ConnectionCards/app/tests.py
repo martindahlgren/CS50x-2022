@@ -60,4 +60,3 @@ class LocationMatchingTestCase(TestCase):
 
         daily_swipes, n_left = util.get_daily_swipes(user_a)
         assert len(daily_swipes) == 0
-        # TODO: Verify that the blocked user is not returned using any endpoint!
